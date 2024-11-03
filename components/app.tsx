@@ -26,12 +26,12 @@ import {
 } from "./ui/dialog"
 import { FaChevronLeft, FaRedo, FaCog, FaCalendarAlt } from 'react-icons/fa';
 
-// import Connect from './components/Connect';
-// import Loading from './components/Loading';
-// import Balances from './components/Balances';
-// import Asset from './components/Asset';
-// import History from './components/History';
-// import Settings from './components/Settings';
+import Connect from './keepkey/Connect';
+import Loading from './keepkey/Loading';
+// import Balances from './keepkey/Balances';
+// import Asset from './keepkey/Asset';
+// import History from './keepkey/History';
+// import Settings from './keepkey/Settings';
 
 const stateNames: { [key: number]: string } = {
     0: 'unknown',
@@ -96,44 +96,44 @@ function App() {
     //     };
     // }, []);
 
-    // const renderContent = () => {
-    //     // If transactionContext is available, show the History view
-    //     if (transactionContext) {
-    //         return <History transactionContext={transactionContext} />;
-    //     }
-    //
-    //     switch (keepkeyState) {
-    //         case 0:
-    //         case 1:
-    //         case 2:
-    //         case 3:
-    //             return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
-    //         case 4:
-    //             return <Connect setIsConnecting={setIsConnecting} />;
-    //         case 5:
-    //             if (assetContext) {
-    //                 return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
-    //             } else {
-    //                 return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
-    //             }
-    //         default:
-    //             return (
-    //                 <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
-    //                     <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={4}>
-    //                         Welcome to the KeepKey Browser Extension
-    //                     </Text>
-    //                     <Button
-    //                         colorScheme="green"
-    //                         size="lg"
-    //                         onClick={refreshBalances}
-    //                         isLoading={isRefreshing}
-    //                         disabled={isRefreshing}>
-    //                         {isRefreshing ? <Spinner size="md" color="white" /> : 'Begin'}
-    //                     </Button>
-    //                 </Flex>
-    //             );
-    //     }
-    // };
+    const renderContent = () => {
+        // If transactionContext is available, show the History view
+        if (transactionContext) {
+            return <History transactionContext={transactionContext} />;
+        }
+
+        switch (keepkeyState) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
+            case 4:
+                return <Connect setIsConnecting={setIsConnecting} />;
+            case 5:
+                // if (assetContext) {
+                //     return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
+                // } else {
+                //     return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
+                // }
+            default:
+                return (
+                    <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
+                        <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={4}>
+                            Welcome to the KeepKey Browser Extension
+                        </Text>
+                        <Button
+                            colorScheme="green"
+                            size="lg"
+                            onClick={refreshBalances}
+                            isLoading={isRefreshing}
+                            disabled={isRefreshing}>
+                            {isRefreshing ? <Spinner size="md" color="white" /> : 'Begin'}
+                        </Button>
+                    </Flex>
+                );
+        }
+    };
 
     // const handleSettingsClick = () => {
     //     if (showBack) {
@@ -172,6 +172,9 @@ function App() {
                 KeepKey State: {keepkeyState !== null ? keepkeyState : 'N/A'} -{' '}
                 {keepkeyState !== null ? stateNames[keepkeyState] : 'unknown'}
             </Text>
+
+            {/* Render the appropriate content */}
+            {renderContent()}
 
             <DialogRoot size="cover" placement="center" motionPreset="slide-in-bottom">
                 <DialogTrigger asChild>

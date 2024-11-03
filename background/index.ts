@@ -2,6 +2,9 @@
 // import { handleWalletRequest } from './methods';
 // import { onStartKeepkey } from './keepkey';
 // import { JsonRpcProvider } from 'ethers';
+import { requestStorage, exampleSidebarStorage, web3ProviderStorage } from '@extension/storage'; // Re-import the storage
+
+console.log('requestStorage: ',requestStorage)
 
 const tag = 'background/index.ts';
 
