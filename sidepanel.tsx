@@ -1,29 +1,13 @@
-import { useState } from "react"
+import { Provider } from "./components/ui/provider"
+import App from "./components/app"
 
-function IndexSidePanel() {
-  const [data, setData] = useState("")
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 16
-      }}>
-      <h2>
-        Welcome to your
-        <a href="https://www.plasmo.com" target="_blank">
-          {" "}
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
-    </div>
-  )
+function Sidebar() {
+    return (
+        <Provider>
+            <App />
+        </Provider>
+    )
 }
 
-export default IndexSidePanel
+export default Sidebar
