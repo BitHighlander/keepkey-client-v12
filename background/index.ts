@@ -1,3 +1,8 @@
+// import { EIP155_CHAINS } from './chains';
+// import { handleWalletRequest } from './methods';
+// import { onStartKeepkey } from './keepkey';
+// import { JsonRpcProvider } from 'ethers';
+
 const tag = 'background/index.ts';
 
 console.log('chrome:', chrome);

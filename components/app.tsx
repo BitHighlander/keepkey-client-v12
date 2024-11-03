@@ -56,23 +56,23 @@ function App() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    // const refreshBalances = async () => {
-    //     try {
-    //         setIsRefreshing(true);
-    //         setKeepkeyState(null);
-    //         chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
-    //             if (response?.success) {
-    //                 console.log('Sidebar opened successfully');
-    //             } else {
-    //                 console.error('Failed to open sidebar:', response?.error);
-    //             }
-    //         });
-    //     } catch (e) {
-    //         console.error(e);
-    //     } finally {
-    //         setTimeout(() => setIsRefreshing(false), 12000); // Stop the spinner after 2 seconds
-    //     }
-    // };
+    const refreshBalances = async () => {
+        try {
+            setIsRefreshing(true);
+            setKeepkeyState(null);
+            chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
+                if (response?.success) {
+                    console.log('Sidebar opened successfully');
+                } else {
+                    console.error('Failed to open sidebar:', response?.error);
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setTimeout(() => setIsRefreshing(false), 12000); // Stop the spinner after 2 seconds
+        }
+    };
 
     // useEffect(() => {
     //     const messageListener = (message: any) => {
