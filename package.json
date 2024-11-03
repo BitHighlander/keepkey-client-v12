@@ -1,7 +1,7 @@
 {
   "name": "keepkey-client-v12",
   "displayName": "Keepkey client v12",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "KeepKey Client",
   "author": "Highlander",
   "scripts": {
@@ -25,7 +25,13 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "<all_urls>"
+    ],
+    "permissions": [
+      "storage",
+      "tabs",
+      "commands",
+      "sidePanel"
     ]
   }
 }
