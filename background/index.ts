@@ -3,11 +3,25 @@
 // import { onStartKeepkey } from './keepkey';
 // import { JsonRpcProvider } from 'ethers';
 import { requestStorage, exampleSidebarStorage, web3ProviderStorage } from '@extension/storage'; // Re-import the storage
-
-console.log('requestStorage: ',requestStorage)
-
 const tag = 'background/index.ts';
 
+
+//
+// background/index.ts
+// import { relay } from "@plasmohq/messaging";
+//
+// // Mock Ethereum address for example
+// const ETHEREUM_ADDRESS = "0x141D9959cAe3853b035000490C03991eB70Fc4aC";
+//
+// // Relay handler to respond with the Ethereum address
+// relay(
+//     { name: "get-ethereum-address" },
+//     async () => {
+//         return { address: ETHEREUM_ADDRESS };
+//     }
+// );
+
+console.log('requestStorage: ',requestStorage)
 console.log('chrome:', chrome);
 console.log('chrome.contextMenus:', chrome.contextMenus);
 
