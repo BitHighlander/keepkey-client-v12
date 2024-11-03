@@ -1,8 +1,8 @@
 {
-  "name": "keepkey-client-v12",
-  "displayName": "Keepkey client v12",
-  "version": "0.0.2",
-  "description": "KeepKey Client",
+  "name": "keepkey-client",
+  "displayName": "Keepkey Client",
+  "version": "1.0.0",
+  "description": "Connect your KeepKey to dApps!",
   "author": "Highlander",
   "scripts": {
     "dev": "plasmo dev",
