@@ -86,6 +86,383 @@ setTimeout(() => {
     onStart();
 }, 5000);
 
+chrome.runtime.onMessage.addListener((message: any, sender: any, sendResponse: any) => {
+    (async () => {
+        const tag = TAG + ' | chrome.runtime.onMessage | ';
+        // console.log(tag, 'Received message:', message);
+
+        try {
+            switch (message.type) {
+                case 'WALLET_REQUEST': {
+                    if (!APP) throw Error('APP not initialized');
+                    const { requestInfo } = message;
+                    const { method, params, chain } = requestInfo;
+
+                    if (method) {
+                        try {
+                            const result = await handleWalletRequest(requestInfo, chain, method, params, APP, ADDRESS);
+                            sendResponse({ result });
+                        } catch (error) {
+                            sendResponse({ error: error.message });
+                        }
+                    } else {
+                        sendResponse({ error: 'Invalid request: missing method' });
+                    }
+                    break;
+                }
+                //OPEN_SIDEBAR
+                case 'open_sidebar':
+                case 'OPEN_SIDEBAR': {
+                    console.log(tag, 'Opening sidebar ** ');
+                    // Query all tabs across all windows
+                    chrome.tabs.query({}, tabs => {
+                        if (chrome.runtime.lastError) {
+                            console.error('Error querying tabs:', chrome.runtime.lastError);
+                            return;
+                        }
+
+                        // Filter out extension pages and internal Chrome pages
+                        const webPageTabs = tabs.filter(tab => {
+                            return (
+                                tab.url &&
+                                !tab.url.startsWith('chrome://') &&
+                                !tab.url.startsWith('chrome-extension://') &&
+                                !tab.url.startsWith('about:')
+                            );
+                        });
+
+                        if (webPageTabs.length > 0) {
+                            // Sort tabs by last accessed time to find the most recently active tab
+                            webPageTabs.sort((a, b) => b.lastAccessed - a.lastAccessed);
+                            const tab = webPageTabs[0];
+                            const windowId = tab.windowId;
+
+                            console.log(tag, 'Opening sidebar in tab:', tab);
+
+                            chrome.sidePanel.open({ windowId }, () => {
+                                if (chrome.runtime.lastError) {
+                                    console.error('Error opening side panel:', chrome.runtime.lastError);
+                                } else {
+                                    console.log('Side panel opened successfully.');
+                                }
+                            });
+                        } else {
+                            console.error('No suitable web page tabs found to open the side panel.');
+                        }
+                    });
+                    break;
+                }
+
+                case 'GET_KEEPKEY_STATE': {
+                    sendResponse({ state: KEEPKEY_STATE });
+                    break;
+                }
+
+                case 'UPDATE_EVENT_BY_ID': {
+                    const { id, updatedEvent } = message.payload;
+
+                    // Update the event in storage
+                    const success = await requestStorage.updateEventById(id, updatedEvent);
+
+                    if (success) {
+                        console.log(`Event with id ${id} has been updated successfully.`);
+                    } else {
+                        console.error(`Failed to update event with id ${id}.`);
+                    }
+
+                    break;
+                }
+
+                case 'ON_START': {
+                    onStart();
+                    setTimeout(() => {
+                        sendResponse({ state: KEEPKEY_STATE });
+                    }, 15000);
+                    break;
+                }
+
+                case 'RESET_APP': {
+                    console.log(tag, 'Resetting app...');
+                    chrome.runtime.reload();
+                    sendResponse({ result: true });
+                    break;
+                }
+
+                case 'GET_APP': {
+                    sendResponse({ app: APP });
+                    break;
+                }
+
+                case 'GET_ASSET_CONTEXT': {
+                    if (APP) {
+                        sendResponse({ assets: APP.assetContext });
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_TX_INSIGHT': {
+                    if (APP) {
+                        //get chainid
+                        const assetContext = APP.assetContext;
+                        if (!assetContext) throw new Error('Invalid asset context. Missing assetContext.');
+                        const { tx, source } = message;
+                        tx.chainId = assetContext.networkId.replace('eip155:', '');
+                        console.log(tag, 'chainId: ', tx.chainId);
+                        console.log(tag, 'GET_TX_INSIGHT', tx, source);
+                        if (!tx) throw new Error('Invalid request: missing tx');
+                        if (!source) throw new Error('Invalid request: missing source');
+
+                        //result
+                        const result = await APP.pioneer.Insight({ tx, source });
+                        console.log(tag, 'GET_TX_INSIGHT', result);
+                        sendResponse(result.data);
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_GAS_ESTIMATE': {
+                    if (APP) {
+                        const providerInfo = await web3ProviderStorage.getWeb3Provider();
+                        if (!providerInfo) throw Error('Failed to get provider info');
+                        console.log('providerInfo', providerInfo);
+                        const provider = new JsonRpcProvider(providerInfo.providerUrl);
+                        const feeData = await provider.getFeeData();
+                        sendResponse(feeData);
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_MAX_SPENDABLE': {
+                    if (APP) {
+                        console.log(tag, 'GET_MAX_SPENDABLE');
+                        const assetContext = APP.assetContext;
+                        if (!assetContext) throw new Error('Invalid asset context. Missing assetContext.');
+
+                        let pubkeys = await APP.pubkeys;
+                        pubkeys = pubkeys.filter((pubkey: any) => pubkey.networks.includes(assetContext.networkId));
+                        console.log('onStart Transfer pubkeys', pubkeys);
+
+                        if (!assetContext.caip) throw new Error('Invalid asset context. Missing caip.');
+
+                        const estimatePayload: any = {
+                            feeRate: 10,
+                            caip: assetContext.caip,
+                            pubkeys,
+                            memo: '',
+                            recipient: '',
+                        };
+
+                        const maxSpendableAmount = await APP.swapKit.estimateMaxSendableAmount({
+                            chain: assetContext.chain,
+                            params: estimatePayload,
+                        });
+
+                        console.log('maxSpendableAmount', maxSpendableAmount);
+                        console.log('maxSpendableAmount string value', maxSpendableAmount.getValue('string'));
+
+                        sendResponse({ maxSpendable: maxSpendableAmount.getValue('string') });
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'SET_ASSET_CONTEXT': {
+                    if (APP) {
+                        const { asset } = message;
+                        if (asset && asset.caip) {
+                            try {
+                                const response = await APP.setAssetContext(asset);
+                                console.log('Asset context set:', response);
+                                chrome.runtime.sendMessage({
+                                    type: 'ASSET_CONTEXT_UPDATED',
+                                    assetContext: response, // Notify frontend about the change
+                                });
+                                sendResponse(response);
+
+                                const currentAssetContext = await APP.assetContext;
+                                //if eip155 then set web3 provider
+                                if (currentAssetContext.networkId.includes('eip155')) {
+                                    const newProvider = EIP155_CHAINS[currentAssetContext.networkId].provider;
+                                    console.log('newProvider', newProvider);
+                                    await web3ProviderStorage.setWeb3Provider(newProvider);
+                                }
+                            } catch (error) {
+                                console.error('Error setting asset context:', error);
+                                sendResponse({ error: 'Failed to fetch assets' });
+                            }
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_DAPPS_BY_NETWORKID': {
+                    if (APP) {
+                        try {
+                            //Assumed EVM*
+                            const { networkId } = message;
+
+                            const dappsResponse = await APP.pioneer.SearchDappsByNetworkId({ networkId });
+                            console.log('dappsResponse:', dappsResponse.data);
+
+                            sendResponse(dappsResponse.data);
+                        } catch (error) {
+                            console.error('Error fetching assets:', error);
+                            sendResponse({ error: 'Failed to fetch assets' });
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'DISCOVERY_DAPP': {
+                    if (APP) {
+                        try {
+                            //Assumed EVM*
+                            const { networkId, url, name, description } = message;
+                            const body = {
+                                networks: [networkId],
+                                url,
+                                name,
+                                description,
+                            };
+                            const dappsResponse = await APP.pioneer.DiscoverDapp(body);
+                            console.log('dappsResponse:', dappsResponse.data);
+
+                            sendResponse(dappsResponse.data);
+                        } catch (error) {
+                            console.error('Error fetching assets:', error);
+                            sendResponse({ error: 'Failed to fetch assets' });
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_ASSET_BALANCE': {
+                    if (APP) {
+                        try {
+                            console.log(tag, 'GET_ASSET_BALANCE');
+                            //Assumed EVM*
+                            const { networkId } = message;
+                            const chainId = networkId.replace('eip155:', '');
+                            console.log('chainId:', chainId);
+                            const nodeInfoResponse = await APP.pioneer.SearchNodesByNetworkId({ chainId });
+                            console.log('nodeInfoResponse:', nodeInfoResponse.data);
+
+                            //TODO
+                            //test all services
+                            //give ping
+                            //remmove broken services
+                            //TODO push broken to api
+
+                            const service = nodeInfoResponse?.data[0]?.service;
+                            if (service) {
+                                console.log(tag, 'service:', service);
+                                if (!ADDRESS) throw new Error('ADDRESS not set');
+                                const provider = new JsonRpcProvider(nodeInfoResponse.data[0].service);
+                                const params = [ADDRESS, 'latest'];
+                                //get balance
+                                const balance = await provider.getBalance(params[0], params[1]);
+                                console.log('balance:', balance);
+                                sendResponse('0x' + balance.toString(16));
+                            } else {
+                                sendResponse('0');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching assets:', error);
+                            sendResponse({ error: 'Failed to fetch balances' });
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_ASSETS_INFO': {
+                    if (APP) {
+                        try {
+                            //Assumed EVM*
+                            const { networkId } = message;
+                            const chainId = networkId.replace('eip155:', '');
+                            console.log('chainId:', chainId);
+                            const nodeInfoResponse = await APP.pioneer.SearchNodesByNetworkId({ chainId });
+                            console.log('nodeInfoResponse:', nodeInfoResponse.data);
+                            const caip = networkId + '/slip44:60';
+                            console.log('caip:', caip);
+                            const marketInfoResponse = await APP.pioneer.MarketInfo({ caip });
+                            console.log('marketInfoResponse:', marketInfoResponse.data);
+
+                            console.log('nodeInfoResponse fetched:', nodeInfoResponse);
+                            sendResponse(nodeInfoResponse);
+                        } catch (error) {
+                            console.error('Error fetching assets:', error);
+                            sendResponse({ error: 'Failed to fetch assets' });
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_ASSETS': {
+                    if (APP) {
+                        try {
+                            const assets = await APP.getAssets();
+                            console.log('Assets fetched:', assets);
+                            sendResponse({ assets });
+                        } catch (error) {
+                            console.error('Error fetching assets:', error);
+                            sendResponse({ error: 'Failed to fetch assets' });
+                        }
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_APP_PUBKEYS': {
+                    if (APP) {
+                        sendResponse({ balances: APP.pubkeys });
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                case 'GET_APP_BALANCES': {
+                    if (APP) {
+                        sendResponse({ balances: APP.balances });
+                    } else {
+                        sendResponse({ error: 'APP not initialized' });
+                    }
+                    break;
+                }
+
+                default:
+                    sendResponse({ error: 'Unknown message type' });
+            }
+        } catch (error) {
+            console.error('Error handling message:', error);
+            sendResponse({ error: error.message });
+        }
+    })();
+
+    // Return true to indicate that the response will be sent asynchronously
+    return true;
+});
+
+
 console.log('requestStorage: ',requestStorage)
 console.log('chrome:', chrome);
 console.log('chrome.contextMenus:', chrome.contextMenus);

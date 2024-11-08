@@ -1,4 +1,4 @@
-import { requestStorage } from '@extension/storage/dist/lib';
+import { requestStorage } from '@extension/storage';
 
 const TAG = ' | bitcoinHandler | ';
 import { Chain, DerivationPath } from '@coinmasters/types';

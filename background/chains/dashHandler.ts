@@ -1,5 +1,5 @@
 const TAG = ' | dashHandler | ';
-import { requestStorage } from '@extension/storage/dist/lib';
+import { requestStorage } from '@extension/storage';
 import { JsonRpcProvider } from 'ethers';
 import { Chain, DerivationPath } from '@coinmasters/types';
 import { AssetValue } from '@pioneer-platform/helpers';

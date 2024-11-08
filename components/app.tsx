@@ -54,8 +54,6 @@ function App() {
 
     const { isOpen: isSettingsOpen, onOpen: onSettingsOpen, onClose: onSettingsClose } = useDisclosure();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
     const refreshBalances = async () => {
         try {
             setIsRefreshing(true);

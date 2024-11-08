@@ -9,7 +9,7 @@ import { AssetValue } from '@pioneer-platform/helpers';
 import { ChainToNetworkId, shortListSymbolToCaip, caipToNetworkId } from '@pioneer-platform/pioneer-caip';
 // @ts-ignore
 import { v4 as uuidv4 } from 'uuid';
-import { requestStorage } from '@extension/storage/dist/lib';
+import { requestStorage } from '@extension/storage';
 //@ts-ignore
 import * as coinSelect from 'coinselect';
 //@ts-ignore
