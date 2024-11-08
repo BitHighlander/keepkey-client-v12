@@ -30,8 +30,8 @@ import Connect from './keepkey/Connect';
 import Loading from './keepkey/Loading';
 import Balances from './keepkey/Balances';
 import Asset from './keepkey/Asset';
-// import History from './keepkey/History';
-// import Settings from './keepkey/Settings';
+import History from './keepkey/History';
+import Settings from './keepkey/Settings';
 
 const stateNames: { [key: number]: string } = {
     0: 'unknown',
@@ -76,6 +76,7 @@ function App() {
 
     useEffect(() => {
         const messageListener = (message: any) => {
+            console.log('Received message:', message);
             if (message.type === 'KEEPKEY_STATE_CHANGED' && message.state !== undefined) {
                 setKeepkeyState(message.state);
             }
@@ -188,8 +189,10 @@ function App() {
                         <DialogCloseTrigger />
                     </DialogHeader>
                     <DialogBody>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                        eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                            Settings For Your KeepKey
+                        </Text>
+                        <Settings />
                     </DialogBody>
                 </DialogContent>
             </DialogRoot>

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { VStack, HStack, Avatar, Text, Switch, Link, Button, Image, Box } from '@chakra-ui/react';
-import { maskingSettingsStorage } from '@extension/storage'; // Import your custom storage
-import { toaster } from "../ui/toaster"
+import { VStack, HStack, Text, Link, Button, Image, Box } from '@chakra-ui/react';
+// import { maskingSettingsStorage } from '@extension/storage'; // Import your custom storage
+// import { toaster } from "../ui/toaster"
+import { Avatar } from '../ui/Avatar';
+import { Switch } from '../ui/Switch';
+
 
 const Settings = () => {
   const [maskingSettings, setMaskingSettings] = useState({
@@ -11,85 +14,85 @@ const Settings = () => {
   });
 
   // Fetch initial masking settings from storage
-  useEffect(() => {
-    const loadSettings = async () => {
-      const metaMaskSetting = await maskingSettingsStorage.getEnableMetaMaskMasking();
-      const xfiSetting = await maskingSettingsStorage.getEnableXfiMasking();
-      const keplrSetting = await maskingSettingsStorage.getEnableKeplrMasking();
-
-      setMaskingSettings({
-        enableMetaMaskMasking: metaMaskSetting,
-        enableXfiMasking: xfiSetting,
-        enableKeplrMasking: keplrSetting,
-      });
-    };
-
-    loadSettings();
-  }, []);
+  // useEffect(() => {
+  //   const loadSettings = async () => {
+  //     const metaMaskSetting = await maskingSettingsStorage.getEnableMetaMaskMasking();
+  //     const xfiSetting = await maskingSettingsStorage.getEnableXfiMasking();
+  //     const keplrSetting = await maskingSettingsStorage.getEnableKeplrMasking();
+  //
+  //     setMaskingSettings({
+  //       enableMetaMaskMasking: metaMaskSetting,
+  //       enableXfiMasking: xfiSetting,
+  //       enableKeplrMasking: keplrSetting,
+  //     });
+  //   };
+  //
+  //   loadSettings();
+  // }, []);
 
   // Toggle functions
-  const toggleMetaMaskMasking = async () => {
-    const newValue = !maskingSettings.enableMetaMaskMasking;
-    await maskingSettingsStorage.setEnableMetaMaskMasking(newValue);
-    setMaskingSettings(prev => ({ ...prev, enableMetaMaskMasking: newValue }));
-  };
+  // const toggleMetaMaskMasking = async () => {
+  //   const newValue = !maskingSettings.enableMetaMaskMasking;
+  //   await maskingSettingsStorage.setEnableMetaMaskMasking(newValue);
+  //   setMaskingSettings(prev => ({ ...prev, enableMetaMaskMasking: newValue }));
+  // };
+  //
+  // const toggleXfiMasking = async () => {
+  //   const newValue = !maskingSettings.enableXfiMasking;
+  //   await maskingSettingsStorage.setEnableXfiMasking(newValue);
+  //   setMaskingSettings(prev => ({ ...prev, enableXfiMasking: newValue }));
+  // };
+  //
+  // const toggleKeplrMasking = async () => {
+  //   const newValue = !maskingSettings.enableKeplrMasking;
+  //   await maskingSettingsStorage.setEnableKeplrMasking(newValue);
+  //   setMaskingSettings(prev => ({ ...prev, enableKeplrMasking: newValue }));
+  // };
 
-  const toggleXfiMasking = async () => {
-    const newValue = !maskingSettings.enableXfiMasking;
-    await maskingSettingsStorage.setEnableXfiMasking(newValue);
-    setMaskingSettings(prev => ({ ...prev, enableXfiMasking: newValue }));
-  };
+  // const handleForceReset = () => {
+  //   chrome.runtime.sendMessage({ type: 'RESET_APP' }, response => {
+  //     if (response?.success) {
+  //       toaster.create({
+  //         title: 'App Reset',
+  //         description: 'The app has been reset successfully. Please reconnect your wallet.',
+  //         status: 'success',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       })
+  //     } else {
+  //       toaster.create({
+  //         title: 'Reset Failed',
+  //         description: 'Failed to reset the app. Please try again.',
+  //         status: 'error',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       })
+  //     }
+  //   });
+  // };
 
-  const toggleKeplrMasking = async () => {
-    const newValue = !maskingSettings.enableKeplrMasking;
-    await maskingSettingsStorage.setEnableKeplrMasking(newValue);
-    setMaskingSettings(prev => ({ ...prev, enableKeplrMasking: newValue }));
-  };
-
-  const handleForceReset = () => {
-    chrome.runtime.sendMessage({ type: 'RESET_APP' }, response => {
-      if (response?.success) {
-        toaster.create({
-          title: 'App Reset',
-          description: 'The app has been reset successfully. Please reconnect your wallet.',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        })
-      } else {
-        toaster.create({
-          title: 'Reset Failed',
-          description: 'Failed to reset the app. Please try again.',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        })
-      }
-    });
-  };
-
-  const handleAnnounceProvider = () => {
-    // Send a postMessage for "ANNOUNCE_REQUEST"
-    window.postMessage(
-      {
-        type: 'ANNOUNCE_REQUEST',
-        provider: {
-          name: 'KeepKey',
-          uuid: '350670db-19fa-4704-a166-e52e178b59d4',
-          icon: 'https://pioneers.dev/coins/keepkey.png',
-          rdns: 'com.keepkey',
-        },
-      },
-      '*',
-    );
-    toast({
-      title: 'Provider Announced',
-      description: 'KeepKey provider has been announced.',
-      status: 'info',
-      duration: 3000,
-      isClosable: true,
-    });
-  };
+  // const handleAnnounceProvider = () => {
+  //   // Send a postMessage for "ANNOUNCE_REQUEST"
+  //   window.postMessage(
+  //     {
+  //       type: 'ANNOUNCE_REQUEST',
+  //       provider: {
+  //         name: 'KeepKey',
+  //         uuid: '350670db-19fa-4704-a166-e52e178b59d4',
+  //         icon: 'https://pioneers.dev/coins/keepkey.png',
+  //         rdns: 'com.keepkey',
+  //       },
+  //     },
+  //     '*',
+  //   );
+  //   toast({
+  //     title: 'Provider Announced',
+  //     description: 'KeepKey provider has been announced.',
+  //     status: 'info',
+  //     duration: 3000,
+  //     isClosable: true,
+  //   });
+  // };
 
   // Helper function to determine if an option is coming soon
   const isComingSoon = name => ['Xfi', 'Keplr'].includes(name);
@@ -126,7 +129,7 @@ const Settings = () => {
             />
             <Text>Enable MetaMask Masking</Text>
           </HStack>
-          <Switch size="md" isChecked={maskingSettings.enableMetaMaskMasking} onChange={toggleMetaMaskMasking} />
+          {/*<Switch size="md" isChecked={maskingSettings.enableMetaMaskMasking} onChange={toggleMetaMaskMasking} />*/}
         </HStack>
 
         {/* Xfi Masking - Coming Soon */}
@@ -139,7 +142,7 @@ const Settings = () => {
             <Switch
               size="md"
               isChecked={maskingSettings.enableXfiMasking}
-              onChange={toggleXfiMasking}
+              // onChange={toggleXfiMasking}
               isDisabled={isComingSoon('Xfi')}
             />
           </HStack>
@@ -175,7 +178,7 @@ const Settings = () => {
             <Switch
               size="md"
               isChecked={maskingSettings.enableKeplrMasking}
-              onChange={toggleKeplrMasking}
+              // onChange={toggleKeplrMasking}
               isDisabled={isComingSoon('Keplr')}
             />
           </HStack>
@@ -202,14 +205,14 @@ const Settings = () => {
         </Text>
 
         {/* Force Reset Button */}
-        <Button colorScheme="red" variant="solid" w="100%" onClick={handleForceReset}>
-          Force Reset App
-        </Button>
+        {/*<Button colorScheme="red" variant="solid" w="100%" onClick={handleForceReset}>*/}
+        {/*  Force Reset App*/}
+        {/*</Button>*/}
 
         {/* Announce Provider Button */}
-        <Button colorScheme="blue" variant="solid" w="100%" onClick={handleAnnounceProvider}>
-          Announce Provider
-        </Button>
+        {/*<Button colorScheme="blue" variant="solid" w="100%" onClick={handleAnnounceProvider}>*/}
+        {/*  Announce Provider*/}
+        {/*</Button>*/}
       </VStack>
     </VStack>
   );
