@@ -11,12 +11,8 @@ import {
   Badge,
   Card,
   CardBody,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
 } from '@chakra-ui/react';
+import { Tabs } from "@chakra-ui/react";
 import { Transfer } from './Transfer';
 import { Receive } from './Receive';
 import AppStore from './AppStore'; // Import the new AppStore component
@@ -90,31 +86,31 @@ export function Asset() {
     }
 
     chrome.runtime.sendMessage(
-      {
-        type: 'WALLET_REQUEST',
-        requestInfo: {
-          chain: 'ethereum',
-          method: 'eth_getBalance',
-          params: [addressEth, 'latest'],
+        {
+          type: 'WALLET_REQUEST',
+          requestInfo: {
+            chain: 'ethereum',
+            method: 'eth_getBalance',
+            params: [addressEth, 'latest'],
+          },
         },
-      },
-      response => {
-        if (chrome.runtime.lastError) {
-          console.error('Error fetching balance:', chrome.runtime.lastError.message);
-          setLoading(false);
-          return;
-        }
-        if (response && response.result) {
-          const balanceWei = BigInt(response.result);
-          const balanceEth = Number(balanceWei) / 1e18;
-          const formattedBalance = formatBalance(balanceEth);
+        response => {
+          if (chrome.runtime.lastError) {
+            console.error('Error fetching balance:', chrome.runtime.lastError.message);
+            setLoading(false);
+            return;
+          }
+          if (response && response.result) {
+            const balanceWei = BigInt(response.result);
+            const balanceEth = Number(balanceWei) / 1e18;
+            const formattedBalance = formatBalance(balanceEth);
 
-          setBalances([{ balance: formattedBalance, symbol: assetLoaded.symbol }]);
-        } else {
-          console.error('Invalid response for balance:', response);
-        }
-        setLoading(false);
-      },
+            setBalances([{ balance: formattedBalance, symbol: assetLoaded.symbol }]);
+          } else {
+            console.error('Invalid response for balance:', response);
+          }
+          setLoading(false);
+        },
     );
   };
 
@@ -148,116 +144,114 @@ export function Asset() {
   };
 
   return (
-    <Flex direction="column" minHeight="100vh" width="100%">
-      <Card>
-        <CardBody>
-          {loading ? (
-            <Flex justifyContent="center" p={5}>
-              <Spinner size="xl" />
-              <Text ml={3}>Loading...</Text>
-            </Flex>
-          ) : activeTab === null && asset ? (
-            <>
-              <Box textAlign="center">
-                <Badge>caip: {asset.caip}</Badge>
-              </Box>
+      <Flex direction="column" minHeight="100vh" width="100%">
+        <Card>
+          <CardBody>
+            {loading ? (
+                <Flex justifyContent="center" p={5}>
+                  <Spinner size="xl" />
+                  <Text ml={3}>Loading...</Text>
+                </Flex>
+            ) : activeTab === null && asset ? (
+                <>
+                  <Box textAlign="center">
+                    <Badge>caip: {asset.caip}</Badge>
+                  </Box>
 
-              <Flex align="center" justifyContent="space-between" mb={4}>
-                <Avatar size="xl" src={asset.icon} />
-                <Box ml={3} flex="1">
-                  <Text fontSize="lg" fontWeight="bold">
-                    {asset.name}
-                  </Text>
-                  <Text fontSize="md" color="gray.500">
-                    {asset.symbol}
-                  </Text>
-                </Box>
-                <Box>
-                  {balances.length > 0 ? (
-                    balances.map((balance: any, index: any) => (
-                      <Text key={index}>
-                        <Text as="span" fontSize="lg">
-                          {formatBalance(Number(balance.balance))}
-                        </Text>
-                        <Box ml={3} flex="1">
-                          <Badge ml={2} colorScheme="teal">
-                            ({balance.symbol || asset.symbol})
-                          </Badge>
-                        </Box>
+                  <Flex align="center" justifyContent="space-between" mb={4}>
+                    <Avatar size="xl" src={asset.icon} />
+                    <Box ml={3} flex="1">
+                      <Text fontSize="lg" fontWeight="bold">
+                        {asset.name}
                       </Text>
-                    ))
-                  ) : (
-                    <Text>No balance available</Text>
-                  )}
-                </Box>
-              </Flex>
+                      <Text fontSize="md" color="gray.500">
+                        {asset.symbol}
+                      </Text>
+                    </Box>
+                    <Box>
+                      {balances.length > 0 ? (
+                          balances.map((balance: any, index: any) => (
+                              <Text key={index}>
+                                <Text as="span" fontSize="lg">
+                                  {formatBalance(Number(balance.balance))}
+                                </Text>
+                                <Box ml={3} flex="1">
+                                  <Badge ml={2} colorScheme="teal">
+                                    ({balance.symbol || asset.symbol})
+                                  </Badge>
+                                </Box>
+                              </Text>
+                          ))
+                      ) : (
+                          <Text>No balance available</Text>
+                      )}
+                    </Box>
+                  </Flex>
 
-              <Flex direction="column" align="center" mb={4} width="100%">
-                <Button my={2} size="md" variant="outline" width="100%" onClick={() => setActiveTab('send')}>
-                  Send {asset.name}
-                </Button>
-                <Button my={2} size="md" variant="outline" width="100%" onClick={() => setActiveTab('receive')}>
-                  Receive {asset.name}
-                </Button>
-                {pubkeys
-                  .filter((pubkey: any) => {
-                    if (asset?.networkId?.startsWith('eip155')) {
-                      return pubkey.networks.some((networkId: any) => networkId.startsWith('eip155'));
-                    }
-                    return pubkey.networks.includes(asset.networkId);
-                  })
-                  .map((pubkey: any, index: any) => (
-                    <Button
-                      key={index}
-                      my={2}
-                      size="md"
-                      variant="outline"
-                      width="100%"
-                      onClick={() =>
-                        openUrl(
-                          pubkey.type === 'address'
-                            ? asset.explorerAddressLink + '/' + pubkey.address
-                            : asset.explorerXpubLink + '/' + pubkey.pubkey,
-                        )
-                      }>
-                      <Box>
-                        <Text>View Transaction History</Text>
-                        <Badge>
-                          <Text size="sm">({pubkey.note})</Text>
-                        </Badge>
-                      </Box>
+                  <Flex direction="column" align="center" mb={4} width="100%">
+                    <Button my={2} size="md" variant="outline" width="100%" onClick={() => setActiveTab('send')}>
+                      Send {asset.name}
                     </Button>
-                  ))}
-              </Flex>
-            </>
-          ) : activeTab === 'send' ? (
-            <Transfer onClose={() => setActiveTab(null)} />
-          ) : activeTab === 'receive' ? (
-            <Receive onClose={() => setActiveTab(null)} />
-          ) : (
-            <Flex justifyContent="center" p={5}>
-              <Text>No asset selected (Go Back!)</Text>
-            </Flex>
-          )}
-        </CardBody>
-      </Card>
+                    <Button my={2} size="md" variant="outline" width="100%" onClick={() => setActiveTab('receive')}>
+                      Receive {asset.name}
+                    </Button>
+                    {pubkeys
+                        .filter((pubkey: any) => {
+                          if (asset?.networkId?.startsWith('eip155')) {
+                            return pubkey.networks.some((networkId: any) => networkId.startsWith('eip155'));
+                          }
+                          return pubkey.networks.includes(asset.networkId);
+                        })
+                        .map((pubkey: any, index: any) => (
+                            <Button
+                                key={index}
+                                my={2}
+                                size="md"
+                                variant="outline"
+                                width="100%"
+                                onClick={() =>
+                                    openUrl(
+                                        pubkey.type === 'address'
+                                            ? asset.explorerAddressLink + '/' + pubkey.address
+                                            : asset.explorerXpubLink + '/' + pubkey.pubkey,
+                                    )
+                                }>
+                              <Box>
+                                <Text>View Transaction History</Text>
+                                <Badge>
+                                  <Text size="sm">({pubkey.note})</Text>
+                                </Badge>
+                              </Box>
+                            </Button>
+                        ))}
+                  </Flex>
+                </>
+            ) : activeTab === 'send' ? (
+                <Transfer onClose={() => setActiveTab(null)} />
+            ) : activeTab === 'receive' ? (
+                <Receive onClose={() => setActiveTab(null)} />
+            ) : (
+                <Flex justifyContent="center" p={5}>
+                  <Text>No asset selected (Go Back!)</Text>
+                </Flex>
+            )}
+          </CardBody>
+        </Card>
 
-      {/* Push AppStore to the bottom */}
-      <Box flexGrow={1} />
+        {/* Push AppStore to the bottom */}
+        <Box flexGrow={1} />
 
-      <Box mt={4}>
-        <Tabs variant="enclosed" mt={4}>
-          <TabList>
-            <Tab>Dapps</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
+        <Box mt={4}>
+          <Tabs.Root defaultValue="dapps">
+            <Tabs.List>
+              <Tabs.Trigger value="dapps">Dapps</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="dapps">
               <AppStore networkId={asset?.networkId} /> {/* The AppStore is now in its own component */}
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-    </Flex>
+            </Tabs.Content>
+          </Tabs.Root>
+        </Box>
+      </Flex>
   );
 }
 

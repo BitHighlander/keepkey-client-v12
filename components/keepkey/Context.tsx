@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Box, Flex, Text, VStack, Input, useToast, IconButton, Tooltip } from '@chakra-ui/react';
-import { CopyIcon } from '@chakra-ui/icons';
+import { Avatar, Box, Flex, Text, VStack, Input, IconButton, Tooltip } from '@chakra-ui/react';
+import { FaCopy } from 'react-icons/fa';
+import { toaster } from '../ui/toaster';
 
 const Context = () => {
-  const toast = useToast();
   const [currentAssetContext, setCurrentAssetContext] = useState({
     icon: 'https://pioneers.dev/coins/ethereum.png',
     name: 'Ethereum',
@@ -13,7 +13,6 @@ const Context = () => {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        // Assuming you'll get asset context from backend here
         chrome.runtime.sendMessage({ type: 'GET_ASSET_CONTEXT' }, response => {
           if (chrome.runtime.lastError) {
             console.error('Error fetching asset context:', chrome.runtime.lastError.message);
@@ -28,12 +27,10 @@ const Context = () => {
         });
       } catch (error) {
         console.error('Error fetching address:', error);
-        toast({
+        toaster.create({
           title: 'Error fetching address',
           description: 'There was an error fetching the address',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
+          type: 'error',
         });
       }
     };
@@ -43,12 +40,10 @@ const Context = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(address);
-    toast({
+    toaster.create({
       title: 'Address copied',
       description: `${currentAssetContext.name} address copied to clipboard`,
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
+      type: 'success',
     });
   };
 
@@ -69,28 +64,33 @@ const Context = () => {
   };
 
   return (
-    <VStack align="start" borderRadius="md" p={6} spacing={5} width="100%">
-      <Flex flex="1" textAlign="center" align="center" width="100%">
-        <Box onClick={clearAssetContext} bg="gray.100" p={1} borderRadius="full">
-          <Avatar size="md" src={currentAssetContext?.icon} />
-        </Box>
-        <Box flex="1" />
-        <Flex align="center" width="100%">
-          <Input
-            value={getEllipsisAddress(address)}
-            isReadOnly
-            placeholder="Address"
-            size="sm"
-            width="120px"
-            mr={2}
-            sx={{
-              whiteSpace: 'nowrap',
-            }}
-          />
-          <IconButton onClick={copyToClipboard} icon={<CopyIcon />} aria-label="Copy address" size="sm" />
+      <VStack align="start" borderRadius="md" p={6} spacing={5} width="100%">
+        <Flex flex="1" textAlign="center" align="center" width="100%">
+          <Box onClick={clearAssetContext} bg="gray.100" p={1} borderRadius="full">
+            <Avatar size="md" src={currentAssetContext?.icon} />
+          </Box>
+          <Box flex="1" />
+          <Flex align="center" width="100%">
+            <Input
+                value={getEllipsisAddress(address)}
+                isReadOnly
+                placeholder="Address"
+                size="sm"
+                width="120px"
+                mr={2}
+                sx={{
+                  whiteSpace: 'nowrap',
+                }}
+            />
+            <IconButton
+                onClick={copyToClipboard}
+                icon={<FaCopy />}
+                aria-label="Copy address"
+                size="sm"
+            />
+          </Flex>
         </Flex>
-      </Flex>
-    </VStack>
+      </VStack>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Image, Text, IconButton, Flex, HStack, Spinner, Button, useDisclosure } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+// import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { LuCheck, LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import { AddDappModal } from './AddDappModal';
 import { dappStorage } from '@extension/storage';
 
@@ -146,7 +147,7 @@ export const AppStore: React.FC<AppStoreProps> = ({ networkId }) => {
           </Grid>
           <Flex justifyContent="center" alignItems="center" mt={4}>
             <IconButton
-              icon={<ChevronLeftIcon />}
+              icon={<LuChevronLeft />}
               aria-label="Previous Page"
               onClick={handlePrevPage}
               isDisabled={currentPage === 1}
@@ -163,7 +164,7 @@ export const AppStore: React.FC<AppStoreProps> = ({ networkId }) => {
               ))}
             </HStack>
             <IconButton
-              icon={<ChevronRightIcon />}
+              icon={<LuChevronRight />}
               aria-label="Next Page"
               onClick={handleNextPage}
               isDisabled={currentPage === totalPages}

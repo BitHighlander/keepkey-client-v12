@@ -28,8 +28,8 @@ import { FaChevronLeft, FaRedo, FaCog, FaCalendarAlt } from 'react-icons/fa';
 
 import Connect from './keepkey/Connect';
 import Loading from './keepkey/Loading';
-// import Balances from './keepkey/Balances';
-// import Asset from './keepkey/Asset';
+import Balances from './keepkey/Balances';
+import Asset from './keepkey/Asset';
 // import History from './keepkey/History';
 // import Settings from './keepkey/Settings';
 
@@ -74,27 +74,27 @@ function App() {
         }
     };
 
-    // useEffect(() => {
-    //     const messageListener = (message: any) => {
-    //         if (message.type === 'KEEPKEY_STATE_CHANGED' && message.state !== undefined) {
-    //             setKeepkeyState(message.state);
-    //         }
-    //         if (message.type === 'ASSET_CONTEXT_UPDATED' && message.assetContext) {
-    //             setAssetContext(message.assetContext);
-    //             setShowBack(true);
-    //         }
-    //         if (message.type === 'TRANSACTION_CONTEXT_UPDATED' && message.id) {
-    //             console.log('TRANSACTION_CONTEXT_UPDATED', message.id);
-    //             setTransactionContext(message.id); // Show Activity page on transaction event
-    //             setShowBack(true); // Ensure the "Back" button is shown
-    //         }
-    //     };
-    //
-    //     chrome.runtime.onMessage.addListener(messageListener);
-    //     return () => {
-    //         chrome.runtime.onMessage.removeListener(messageListener);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const messageListener = (message: any) => {
+            if (message.type === 'KEEPKEY_STATE_CHANGED' && message.state !== undefined) {
+                setKeepkeyState(message.state);
+            }
+            if (message.type === 'ASSET_CONTEXT_UPDATED' && message.assetContext) {
+                setAssetContext(message.assetContext);
+                setShowBack(true);
+            }
+            if (message.type === 'TRANSACTION_CONTEXT_UPDATED' && message.id) {
+                console.log('TRANSACTION_CONTEXT_UPDATED', message.id);
+                setTransactionContext(message.id); // Show Activity page on transaction event
+                setShowBack(true); // Ensure the "Back" button is shown
+            }
+        };
+
+        chrome.runtime.onMessage.addListener(messageListener);
+        return () => {
+            chrome.runtime.onMessage.removeListener(messageListener);
+        };
+    }, []);
 
     const renderContent = () => {
         // If transactionContext is available, show the History view
@@ -111,11 +111,11 @@ function App() {
             case 4:
                 return <Connect setIsConnecting={setIsConnecting} />;
             case 5:
-                // if (assetContext) {
-                //     return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
-                // } else {
-                //     return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
-                // }
+                if (assetContext) {
+                    return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
+                } else {
+                    return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
+                }
             default:
                 return (
                     <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
@@ -135,36 +135,36 @@ function App() {
         }
     };
 
-    // const handleSettingsClick = () => {
-    //     if (showBack) {
-    //         // Clear assetContext on the frontend
-    //         setAssetContext(null);
-    //         setTransactionContext(null);
-    //         setShowBack(false); // Hide the back button
-    //
-    //         // Clear assetContext on the backend
-    //         chrome.runtime.sendMessage({ type: 'CLEAR_ASSET_CONTEXT' }, response => {
-    //             if (response?.success) {
-    //                 console.log('Asset context cleared on backend');
-    //             } else {
-    //                 console.error('Failed to clear asset context on backend:', response?.error);
-    //             }
-    //         });
-    //     } else {
-    //         // Open settings
-    //         onSettingsOpen();
-    //         setShowBack(true); // Show the back button when settings are opened
-    //     }
-    // };
+    const handleSettingsClick = () => {
+        if (showBack) {
+            // Clear assetContext on the frontend
+            setAssetContext(null);
+            setTransactionContext(null);
+            setShowBack(false); // Hide the back button
 
-    // const handleTransactionsClick = () => {
-    //     try {
-    //         setTransactionContext('none'); // Switch to the transaction context
-    //         setShowBack(true); // Show the back button
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // };
+            // Clear assetContext on the backend
+            chrome.runtime.sendMessage({ type: 'CLEAR_ASSET_CONTEXT' }, response => {
+                if (response?.success) {
+                    console.log('Asset context cleared on backend');
+                } else {
+                    console.error('Failed to clear asset context on backend:', response?.error);
+                }
+            });
+        } else {
+            // Open settings
+            onSettingsOpen();
+            setShowBack(true); // Show the back button when settings are opened
+        }
+    };
+
+    const handleTransactionsClick = () => {
+        try {
+            setTransactionContext('none'); // Switch to the transaction context
+            setShowBack(true); // Show the back button
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     return (
         <Box p={4}>

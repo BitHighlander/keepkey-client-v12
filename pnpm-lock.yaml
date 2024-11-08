@@ -11,15 +11,15 @@ importers:
       '@chakra-ui/react':
         specifier: ^3.0.2
         version: 3.0.2(@emotion/react@11.13.3(@types/react@18.2.48)(react@18.2.0))(@internationalized/date@3.5.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@coinmasters/pioneer-db':
+        specifier: ^4.8.2
+        version: 4.8.2
       '@coinmasters/pioneer-sdk':
-        specifier: 4.7.72
-        version: 4.7.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
+        specifier: 4.8.2
+        version: 4.8.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
       '@coinmasters/types':
         specifier: ^4.7.71
         version: 4.8.1
-      '@coinmasters/wallet-keepkey':
-        specifier: ^13.0.72
-        version: 13.0.72(@coinmasters/toolbox-cosmos@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-ripple@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@keepkey/keepkey-sdk@0.2.58)(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)(bitcoinjs-lib@6.1.5)
       '@emotion/react':
         specifier: ^11.13.3
         version: 11.13.3(@types/react@18.2.48)(react@18.2.0)
@@ -38,9 +38,18 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.7.7
+      canvas-confetti:
+        specifier: ^1.9.3
+        version: 1.9.3
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       ethers:
         specifier: ^6.13.4
         version: 6.13.4
+      framer-motion:
+        specifier: ^11.11.11
+        version: 11.11.11(@emotion/is-prop-valid@1.3.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       keymirror:
         specifier: ^0.1.1
         version: 0.1.1
@@ -53,6 +62,12 @@ importers:
       plasmo:
         specifier: 0.89.3
         version: 0.89.3(@swc/core@1.7.42(@swc/helpers@0.5.13))(@swc/helpers@0.5.13)(lodash@4.17.21)(postcss@8.4.47)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)(typescript@5.3.3))
+      punycode:
+        specifier: ^2.3.1
+        version: 2.3.1
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -187,59 +202,52 @@ packages:
       react: '>=18'
       react-dom: '>=18'
 
-  '@coinmasters/api@3.7.72':
-    resolution: {integrity: sha512-CC2FYBKyNuhh3BTR8VBqAMS4zixBSoQWt4VHjVkvX0UElAOnMLbS7+j5ctEl7cGSa+zXOaCSfUCcKI1C5ahMmg==}
+  '@coinmasters/api@3.8.2':
+    resolution: {integrity: sha512-Tv9QiMeA3DyVWcT2sTRvf+J4ommGkcoqqhS9PNySI9vdgaf+nkBmfBElAZUwkkn61l7bakIsJwhBkU5tD4mx1g==}
 
-  '@coinmasters/core@11.0.72':
-    resolution: {integrity: sha512-0vLZDoSUlavtNJwttxJBuVF7ah2vCIBWg2OEFD7nngVikkNRRy6rWRjPjJjQUUT5EFnhjwlwOODvKvDt657jBg==}
+  '@coinmasters/core@12.0.2':
+    resolution: {integrity: sha512-7GjnQguVYV53ni3fgee4vg0WngerQVU8VhCwgzZw6r8lt/CoTM/brGqdoVE0EkdWrGtGHEbZyRc0s0VeddHoeg==}
     peerDependencies:
-      '@coinmasters/api': 3.7.72
-      '@coinmasters/toolbox-cosmos': 11.0.72
-      '@coinmasters/toolbox-evm': 11.0.72
-      '@coinmasters/toolbox-utxo': 11.0.72
+      '@coinmasters/api': 3.8.2
+      '@coinmasters/toolbox-cosmos': 11.1.2
+      '@coinmasters/toolbox-evm': 11.1.2
+      '@coinmasters/toolbox-utxo': 11.1.2
 
-  '@coinmasters/pioneer-sdk@4.7.72':
-    resolution: {integrity: sha512-IsXP/X6MgQzgY/cnnDLree0LF/UKmardvjUw8uhTSpvPdJk5I1Eelo3PGh8g4lx3cyvrvNPrxp7Aamg6nrb9LQ==}
+  '@coinmasters/pioneer-db@4.8.2':
+    resolution: {integrity: sha512-3NCoKrIDQ7T46WSFuWocj7CHYE7Ui/S8U78M/sF6Q8cN8iQZqvv9tuLO1Ddszc7he4jUtLa8jau0tLE2vDqWNA==}
 
-  '@coinmasters/tokens@3.7.72':
-    resolution: {integrity: sha512-nBBxy/lNseIqt7fMbtW4a6C0gnRLju5wFoktyhX/Ab1rAXimBkQPil5jY2EvFpqLYhayKfpdPrDVMXiWbWB4EQ==}
+  '@coinmasters/pioneer-sdk@4.8.2':
+    resolution: {integrity: sha512-W0SStQvjq7BJfGnJ/m7AI8ggZHgxKwCT609vA7u64H+z71QaO2rbrLwyqECt5G5g6bBQBG2DNtjUVDu9c/pcVg==}
 
   '@coinmasters/tokens@3.8.1':
     resolution: {integrity: sha512-hDklsxi3XfNrNu0RtLW8pW8ag/ljIQHuEQExToVpGr6AzqdIOoYICZNOI/PX6u8VpMxYtg1iZKl8LFKEitjuCQ==}
 
-  '@coinmasters/toolbox-cosmos@11.0.72':
-    resolution: {integrity: sha512-/Ll0BAHun9w774xnw38ZGWuUNQs+ItvYuMMcnPRLSl1k9e8RWc2+O4z9GIgfqMs37puNJVYd551Nq3YtS5411Q==}
+  '@coinmasters/tokens@3.8.2':
+    resolution: {integrity: sha512-PIiRW5M9udgRwl4vYuyfGOS+EFtsfY9kRpso3U0Z7nCp3Aiq4dAMrf4jg9RYBx4eaTWZJTaGG/TUt/1qJue0yw==}
+
+  '@coinmasters/toolbox-cosmos@11.1.2':
+    resolution: {integrity: sha512-mCI3L7ug0vvwPdiF5zB38X7z2mdcKNZZFnX6YPGaxa4okXd9nyDTz3mq+gRFr0m8ybViqqYbsXFMb9HKyOTMuA==}
     peerDependencies:
       '@pioneer-platform/helpers': ^4.0.12
 
-  '@coinmasters/toolbox-evm@11.0.72':
-    resolution: {integrity: sha512-33bWdy5jsI3TOM6LQoe2UmvVmCdp2QpGZ4AKMsPSO08WlIyY6VDsT8JIvf9HH0GMDPViWLj0BmN9zm/QK/vl/g==}
+  '@coinmasters/toolbox-evm@11.1.2':
+    resolution: {integrity: sha512-tA1bn55P+Q3lEDHu02JSH7arS4LHp23n/s5NfOPljGjtlinJ6APYqttim4DGvHN8LMMe7RlR2MPREBwOpMhwQA==}
     peerDependencies:
       '@pioneer-platform/helpers': ^4.0.12
 
-  '@coinmasters/toolbox-ripple@11.0.72':
-    resolution: {integrity: sha512-4FBioKH/yn5k7pchDMTf+A5Tn/SOXhNMUk0cSaHdqqpXCneIGWHs9Yk9lNLV7jorYDg3D3YXnVA/Ug+66viyLg==}
+  '@coinmasters/toolbox-ripple@11.1.2':
+    resolution: {integrity: sha512-+sJVgnaqKX6ulbR95IMDRDXmX/P97FBQNLHDbula9SEUei60/KUvyKcB93Yz8aKJU5nc0ZCiVGrkJr+qkhV/BQ==}
     peerDependencies:
       '@pioneer-platform/helpers': latest
 
-  '@coinmasters/toolbox-utxo@11.0.72':
-    resolution: {integrity: sha512-F+b1O+PCpPtZ0uZ5urerz5h0Vy0tgH2bytBzziHToZTYkYxheL1RzYD/yPQQfyquEuYaIyN7wUnatPgitauuCQ==}
-
-  '@coinmasters/types@4.7.72':
-    resolution: {integrity: sha512-NqJ8SJfVKA3PPtzV3Ok/h6hmzx+Z5Zz0JUN66N2SIOlBlpefLqDaX9/OYkuxvPdIrxpY2wovi3CnbAc7R0xRtg==}
+  '@coinmasters/toolbox-utxo@11.1.2':
+    resolution: {integrity: sha512-/Rzg/YJNHfhGeWHDAHYRgWew33lBen6FMp7wifK5cFu/autLWXIGpVK2W97sVaAHyYJf+Ow9ixHPLyVOtYg4gg==}
 
   '@coinmasters/types@4.8.1':
     resolution: {integrity: sha512-kCUGsekHEriFIioX4uVJjRtiGCUkVpVVvIgj7IO5xSnMOMQ/95lzoADmkpIzfIwOAhiPuR0WjXgczvMmZapivQ==}
 
-  '@coinmasters/wallet-keepkey@13.0.72':
-    resolution: {integrity: sha512-/D1KVkMk38i6gKxMR4HQ11Fl/h3q0oFKb3BMfH1Yy3AC+BrFGQXdkP7xERSzdTuF4r/OPby5AlF1PDqvPuo4GA==}
-    peerDependencies:
-      '@coinmasters/toolbox-cosmos': 11.0.72
-      '@coinmasters/toolbox-evm': 11.0.72
-      '@coinmasters/toolbox-ripple': 11.0.72
-      '@coinmasters/toolbox-utxo': 11.0.72
-      '@keepkey/keepkey-sdk': ^0.2.57
-      bitcoinjs-lib: 5.2.0
+  '@coinmasters/types@4.8.2':
+    resolution: {integrity: sha512-YnmFiit7PGJzCvPDeWlW8xRx66X7FB7qI01H1Sxyn+rELBfoyIesGVgY8S13FYglakh1gAMTN1X9SizbcXyxqQ==}
 
   '@confio/ics23@0.6.8':
     resolution: {integrity: sha512-wB6uo+3A50m0sW/EWcU64xpV/8wShZ6bMTa7pF8eYsTrSkQA7oLUIJcs/wb8g4y2Oyq701BaGiO6n/ak5WXO1w==}
@@ -1809,9 +1817,6 @@ packages:
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
-  '@types/bchaddrjs@0.4.0':
-    resolution: {integrity: sha512-Nvv3haWpXNWYfKasVoEp3VBgVsBTLTh45anhHUN8xVUPhn4ErU3FPS5AEcZtACWc5ICGUxbaiLTWOnwDkwYF1Q==}
-
   '@types/chrome@0.0.258':
     resolution: {integrity: sha512-vicJi6cg2zaFuLmLY7laG6PHBknjKFusPYlaKQ9Zlycskofy71rStlGvW07MUuqUIVorZf8k5KH+zeTTGcH2dQ==}
 
@@ -2523,12 +2528,19 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
+  camelcase@5.3.1:
+    resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
+    engines: {node: '>=6'}
+
   camelcase@6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
   caniuse-lite@1.0.30001677:
     resolution: {integrity: sha512-fmfjsOlJUpMWu+mAAtZZZHz7UEwsUxIIvu1TJfO1HqFQvB/B+ii0xr9B5HpbZY/mC4XZ8SvjHJqtAY6pDPQEog==}
+
+  canvas-confetti@1.9.3:
+    resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
 
   cashaddrjs@0.4.4:
     resolution: {integrity: sha512-xZkuWdNOh0uq/mxJIng6vYWfTowZLd9F4GMAlp2DwFHlcCqCm91NtuAc47RuV4L7r4PYcY5p6Cr2OKNb4hnkWA==}
@@ -2576,6 +2588,9 @@ packages:
   cli-width@4.1.0:
     resolution: {integrity: sha512-ouuZd4/dm2Sw5Gmqy6bGyNNNe1qt9RpmxveLSO7KcgsTnU7RXfsw+/bukWGo1abgBiMAic068rclZsO4IWmmxQ==}
     engines: {node: '>= 12'}
+
+  cliui@6.0.0:
+    resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==}
 
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
@@ -2707,6 +2722,9 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+
   debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
     engines: {node: '>=6.0'}
@@ -2715,6 +2733,10 @@ packages:
     peerDependenciesMeta:
       supports-color:
         optional: true
+
+  decamelize@1.2.0:
+    resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
+    engines: {node: '>=0.10.0'}
 
   decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
@@ -2759,6 +2781,9 @@ packages:
   diff@4.0.2:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
+
+  dijkstrajs@1.0.3:
+    resolution: {integrity: sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==}
 
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
@@ -2927,6 +2952,10 @@ packages:
   find-root@1.1.0:
     resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
 
+  find-up@4.1.0:
+    resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
+    engines: {node: '>=8'}
+
   focus-trap@7.5.4:
     resolution: {integrity: sha512-N7kHdlgsO/v+iD/dMoJKtsSqs5Dz/dXZVebRgJw23LDk+jMi/974zyiOYDziY2JPp8xivq9BmUGwIJMiuSBi7w==}
 
@@ -2954,6 +2983,20 @@ packages:
     resolution: {integrity: sha512-tzN8e4TX8+kkxGPK8D5u0FNmjPUjw3lwC9lSLxxoB/+GtsJG91CO8bSWy73APlgAZzZbXEYZJuxjkHH2w+Ezhw==}
     engines: {node: '>= 6'}
 
+  framer-motion@11.11.11:
+    resolution: {integrity: sha512-tuDH23ptJAKUHGydJQII9PhABNJBpB+z0P1bmgKK9QFIssHGlfPd6kxMq00LSKwE27WFsb2z0ovY0bpUyMvfRw==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
@@ -2972,6 +3015,10 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  get-caller-file@2.0.5:
+    resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
+    engines: {node: 6.* || 8.* || >= 10.*}
 
   get-intrinsic@1.2.4:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
@@ -3118,6 +3165,9 @@ packages:
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
+
+  idb@8.0.0:
+    resolution: {integrity: sha512-l//qvlAKGmQO31Qn7xdzagVPPaHTxXx199MhrAFuVBTPqydcPYBWjkrbv4Y0ktB+GmWOiwHl237UUOrLmQxLvw==}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -3428,6 +3478,10 @@ packages:
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
+  locate-path@5.0.0:
+    resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
+    engines: {node: '>=8'}
+
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
 
@@ -3717,6 +3771,18 @@ packages:
     resolution: {integrity: sha512-mlVgR3PGuzlo0MmTdk4cXqXWlwQDLnONTAg6sm62XkMJEiRxN3GL3SffkYvqwonbkJBcrI7Uvv5Zh9yjvn2iUw==}
     engines: {node: '>=12.20'}
 
+  p-limit@2.3.0:
+    resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
+    engines: {node: '>=6'}
+
+  p-locate@4.1.0:
+    resolution: {integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==}
+    engines: {node: '>=8'}
+
+  p-try@2.2.0:
+    resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
+    engines: {node: '>=6'}
+
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
@@ -3735,6 +3801,10 @@ packages:
   parse-node-version@1.0.1:
     resolution: {integrity: sha512-3YHlOa/JgH6Mnpr05jP9eDG254US9ek25LyIxZlDItp2iJtwyaXQb57lBYLdT3MowkUFYEV2XXNAYIPlESvJlA==}
     engines: {node: '>= 0.10'}
+
+  path-exists@4.0.0:
+    resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
+    engines: {node: '>=8'}
 
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
@@ -3775,6 +3845,10 @@ packages:
   plasmo@0.89.3:
     resolution: {integrity: sha512-rBOv1fbNnhdfsDmI5XAMCvNmPwZsXWdcPU4lLH8I1PqXNDeyXCEJdiCLC+4LvB8V262a2UhHgvPwTW9Au4qAmQ==}
     hasBin: true
+
+  pngjs@5.0.0:
+    resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}
+    engines: {node: '>=10.13.0'}
 
   postcss-load-config@4.0.2:
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
@@ -3857,6 +3931,11 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  qrcode@1.5.4:
+    resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -3941,6 +4020,13 @@ packages:
     resolution: {integrity: sha512-+crtS5QjFRqFCoQmvGduwYWEBng99ZvmFvF+cUJkGYF1L1BfU8C6Zp9T7f5vPAwyLkUExpvK+ANVZmGU49qi4Q==}
     engines: {node: '>=12'}
 
+  require-directory@2.1.1:
+    resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
+    engines: {node: '>=0.10.0'}
+
+  require-main-filename@2.0.0:
+    resolution: {integrity: sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==}
+
   resolve-alpn@1.2.1:
     resolution: {integrity: sha512-0a1F4l73/ZFZOakJnQ3FvkJ2+gSTQWz/r2KE5OdDY0TxPm5h4GkqkWWfM47T7HsbnOtcJVEF4epCVy6u7Q3K+g==}
 
@@ -4020,6 +4106,9 @@ packages:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
     hasBin: true
+
+  set-blocking@2.0.0:
+    resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -4389,6 +4478,9 @@ packages:
   whatwg-url@7.1.0:
     resolution: {integrity: sha512-WUu7Rg1DroM7oQvGWfOiAK21n74Gg+T4elXEQYkOhtyLeWiJFoOGLXPKI/9gzIie9CtwVLm8wtw6YJdKyxSjeg==}
 
+  which-module@2.0.1:
+    resolution: {integrity: sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==}
+
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -4454,6 +4546,9 @@ packages:
   xxhash-wasm@0.4.2:
     resolution: {integrity: sha512-/eyHVRJQCirEkSZ1agRSCwriMhwlyUcFkXD5TPVSLP+IPzjsqMVzZwdoczLp1SoQU0R3dxz1RpIK+4YNQbCVOA==}
 
+  y18n@4.0.3:
+    resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -4468,6 +4563,14 @@ packages:
     resolution: {integrity: sha512-a6ae//JvKDEra2kdi1qzCyrJW/WZCgFi8ydDV+eXExl95t+5R+ijnqHJbz9tmMh8FUjx3iv2fCQ4dclAQlO2UQ==}
     engines: {node: '>= 14'}
     hasBin: true
+
+  yargs-parser@18.1.3:
+    resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}
+    engines: {node: '>=6'}
+
+  yargs@15.4.1:
+    resolution: {integrity: sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==}
+    engines: {node: '>=8'}
 
   yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
@@ -4704,18 +4807,18 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@coinmasters/api@3.7.72':
+  '@coinmasters/api@3.8.2':
     dependencies:
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/types': 4.8.2
       ky: 1.1.3
 
-  '@coinmasters/core@11.0.72(@coinmasters/api@3.7.72)(@coinmasters/toolbox-cosmos@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)':
+  '@coinmasters/core@12.0.2(@coinmasters/api@3.8.2)(@coinmasters/toolbox-cosmos@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.1.2(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)':
     dependencies:
-      '@coinmasters/api': 3.7.72
-      '@coinmasters/toolbox-cosmos': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-evm': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-utxo': 11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13))
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/api': 3.8.2
+      '@coinmasters/toolbox-cosmos': 11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
+      '@coinmasters/toolbox-evm': 11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
+      '@coinmasters/toolbox-utxo': 11.1.2(@swc/core@1.7.42(@swc/helpers@0.5.13))
+      '@coinmasters/types': 4.8.2
       '@pioneer-platform/helpers': 4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))
       '@pioneer-platform/loggerdog': 8.3.1(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
       '@pioneer-platform/pioneer-caip': 9.2.37
@@ -4724,21 +4827,27 @@ snapshots:
       - '@swc/wasm'
       - '@types/node'
 
-  '@coinmasters/pioneer-sdk@4.7.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)':
+  '@coinmasters/pioneer-db@4.8.2':
     dependencies:
-      '@coinmasters/api': 3.7.72
-      '@coinmasters/core': 11.0.72(@coinmasters/api@3.7.72)(@coinmasters/toolbox-cosmos@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
-      '@coinmasters/tokens': 3.7.72
-      '@coinmasters/toolbox-cosmos': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-evm': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-ripple': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-utxo': 11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13))
-      '@coinmasters/types': 4.7.72
+      idb: 8.0.0
+
+  '@coinmasters/pioneer-sdk@4.8.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)':
+    dependencies:
+      '@coinmasters/api': 3.8.2
+      '@coinmasters/core': 12.0.2(@coinmasters/api@3.8.2)(@coinmasters/toolbox-cosmos@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.1.2(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
+      '@coinmasters/tokens': 3.8.2
+      '@coinmasters/toolbox-cosmos': 11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
+      '@coinmasters/toolbox-evm': 11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
+      '@coinmasters/toolbox-ripple': 11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
+      '@coinmasters/toolbox-utxo': 11.1.2(@swc/core@1.7.42(@swc/helpers@0.5.13))
+      '@coinmasters/types': 4.8.2
+      '@keepkey/keepkey-sdk': 0.2.58
       '@pioneer-platform/loggerdog': 8.3.1(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
       '@pioneer-platform/pioneer-caip': 9.2.37
       '@pioneer-platform/pioneer-client': 9.2.6
       '@pioneer-platform/pioneer-coins': 9.2.24(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
       '@pioneer-platform/pioneer-discovery': 0.0.15(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
+      coinselect: 3.1.13
     transitivePeerDependencies:
       - '@pioneer-platform/helpers'
       - '@swc/core'
@@ -4748,14 +4857,14 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@coinmasters/tokens@3.7.72': {}
-
   '@coinmasters/tokens@3.8.1': {}
 
-  '@coinmasters/toolbox-cosmos@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
+  '@coinmasters/tokens@3.8.2': {}
+
+  '@coinmasters/toolbox-cosmos@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
     dependencies:
-      '@coinmasters/api': 3.7.72
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/api': 3.8.2
+      '@coinmasters/types': 4.8.2
       '@cosmjs/amino': 0.32.0
       '@cosmjs/crypto': 0.32.0
       '@cosmjs/encoding': 0.32.0
@@ -4778,9 +4887,9 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@coinmasters/toolbox-evm@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
+  '@coinmasters/toolbox-evm@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
     dependencies:
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/types': 4.8.2
       '@pioneer-platform/helpers': 4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))
       '@pioneer-platform/pioneer-caip': 9.2.37
       ethers: 6.9.0
@@ -4788,10 +4897,10 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@coinmasters/toolbox-ripple@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
+  '@coinmasters/toolbox-ripple@11.1.2(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))':
     dependencies:
-      '@coinmasters/api': 3.7.72
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/api': 3.8.2
+      '@coinmasters/types': 4.8.2
       '@cosmjs/amino': 0.31.1
       '@cosmjs/crypto': 0.31.1
       '@cosmjs/encoding': 0.31.1
@@ -4814,9 +4923,9 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@coinmasters/toolbox-utxo@11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13))':
+  '@coinmasters/toolbox-utxo@11.1.2(@swc/core@1.7.42(@swc/helpers@0.5.13))':
     dependencies:
-      '@coinmasters/types': 4.7.72
+      '@coinmasters/types': 4.8.2
       '@pioneer-platform/helpers': 4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))
       '@pioneer-platform/pioneer-caip': 9.2.37
       '@psf/bitcoincashjs-lib': 4.0.3
@@ -4832,35 +4941,9 @@ snapshots:
       - '@swc/core'
       - '@swc/wasm'
 
-  '@coinmasters/types@4.7.72': {}
-
   '@coinmasters/types@4.8.1': {}
 
-  '@coinmasters/wallet-keepkey@13.0.72(@coinmasters/toolbox-cosmos@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-evm@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-ripple@11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))))(@coinmasters/toolbox-utxo@11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13)))(@keepkey/keepkey-sdk@0.2.58)(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)(bitcoinjs-lib@6.1.5)':
-    dependencies:
-      '@coinmasters/tokens': 3.7.72
-      '@coinmasters/toolbox-cosmos': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-evm': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-ripple': 11.0.72(@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13)))
-      '@coinmasters/toolbox-utxo': 11.0.72(@swc/core@1.7.42(@swc/helpers@0.5.13))
-      '@coinmasters/types': 4.7.72
-      '@cosmjs/math': 0.32.4
-      '@cosmjs/stargate': 0.31.1
-      '@keepkey/keepkey-sdk': 0.2.58
-      '@pioneer-platform/loggerdog': 8.3.1(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
-      '@pioneer-platform/pioneer-caip': 9.2.37
-      '@pioneer-platform/pioneer-coins': 9.2.24(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
-      '@types/bchaddrjs': 0.4.0
-      bchaddrjs: 0.5.2
-      bitcoinjs-lib: 6.1.5
-      ethers: 6.13.4
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-      - bufferutil
-      - debug
-      - utf-8-validate
+  '@coinmasters/types@4.8.2': {}
 
   '@confio/ics23@0.6.8':
     dependencies:
@@ -4869,9 +4952,9 @@ snapshots:
 
   '@cosmjs/amino@0.31.1':
     dependencies:
-      '@cosmjs/crypto': 0.31.1
-      '@cosmjs/encoding': 0.31.1
-      '@cosmjs/math': 0.31.1
+      '@cosmjs/crypto': 0.31.3
+      '@cosmjs/encoding': 0.31.3
+      '@cosmjs/math': 0.31.3
       '@cosmjs/utils': 0.31.3
 
   '@cosmjs/amino@0.31.3':
@@ -4883,19 +4966,19 @@ snapshots:
 
   '@cosmjs/amino@0.32.0':
     dependencies:
-      '@cosmjs/crypto': 0.32.0
-      '@cosmjs/encoding': 0.32.0
-      '@cosmjs/math': 0.32.0
+      '@cosmjs/crypto': 0.32.4
+      '@cosmjs/encoding': 0.32.4
+      '@cosmjs/math': 0.32.4
       '@cosmjs/utils': 0.32.4
 
   '@cosmjs/crypto@0.31.1':
     dependencies:
-      '@cosmjs/encoding': 0.31.1
-      '@cosmjs/math': 0.31.1
+      '@cosmjs/encoding': 0.31.3
+      '@cosmjs/math': 0.31.3
       '@cosmjs/utils': 0.31.3
       '@noble/hashes': 1.5.0
       bn.js: 5.2.1
-      elliptic: 6.5.4
+      elliptic: 6.6.0
       libsodium-wrappers-sumo: 0.7.15
 
   '@cosmjs/crypto@0.31.3':
@@ -4910,12 +4993,12 @@ snapshots:
 
   '@cosmjs/crypto@0.32.0':
     dependencies:
-      '@cosmjs/encoding': 0.32.0
-      '@cosmjs/math': 0.32.0
+      '@cosmjs/encoding': 0.32.4
+      '@cosmjs/math': 0.32.4
       '@cosmjs/utils': 0.32.4
       '@noble/hashes': 1.5.0
       bn.js: 5.2.1
-      elliptic: 6.5.4
+      elliptic: 6.6.0
       libsodium-wrappers-sumo: 0.7.15
 
   '@cosmjs/crypto@0.32.4':
@@ -4925,7 +5008,7 @@ snapshots:
       '@cosmjs/utils': 0.32.4
       '@noble/hashes': 1.5.0
       bn.js: 5.2.1
-      elliptic: 6.5.4
+      elliptic: 6.6.0
       libsodium-wrappers-sumo: 0.7.15
 
   '@cosmjs/encoding@0.31.1':
@@ -4980,10 +5063,10 @@ snapshots:
 
   '@cosmjs/proto-signing@0.31.1':
     dependencies:
-      '@cosmjs/amino': 0.31.1
-      '@cosmjs/crypto': 0.31.1
-      '@cosmjs/encoding': 0.31.1
-      '@cosmjs/math': 0.31.1
+      '@cosmjs/amino': 0.31.3
+      '@cosmjs/crypto': 0.31.3
+      '@cosmjs/encoding': 0.31.3
+      '@cosmjs/math': 0.31.3
       '@cosmjs/utils': 0.31.3
       cosmjs-types: 0.8.0
       long: 4.0.0
@@ -5001,9 +5084,9 @@ snapshots:
   '@cosmjs/proto-signing@0.32.0':
     dependencies:
       '@cosmjs/amino': 0.32.0
-      '@cosmjs/crypto': 0.32.0
-      '@cosmjs/encoding': 0.32.0
-      '@cosmjs/math': 0.32.0
+      '@cosmjs/crypto': 0.32.4
+      '@cosmjs/encoding': 0.32.4
+      '@cosmjs/math': 0.32.4
       '@cosmjs/utils': 0.32.4
       cosmjs-types: 0.9.0
 
@@ -5050,8 +5133,8 @@ snapshots:
     dependencies:
       '@confio/ics23': 0.6.8
       '@cosmjs/amino': 0.32.0
-      '@cosmjs/encoding': 0.32.0
-      '@cosmjs/math': 0.32.0
+      '@cosmjs/encoding': 0.32.4
+      '@cosmjs/math': 0.32.4
       '@cosmjs/proto-signing': 0.32.0
       '@cosmjs/stream': 0.32.4
       '@cosmjs/tendermint-rpc': 0.32.4
@@ -6193,7 +6276,7 @@ snapshots:
   '@pioneer-platform/helpers@4.0.13(@swc/core@1.7.42(@swc/helpers@0.5.13))':
     dependencies:
       '@coinmasters/tokens': 3.8.1
-      '@coinmasters/types': 4.8.1
+      '@coinmasters/types': 4.8.2
       '@noble/hashes': 1.5.0
       '@pioneer-platform/loggerdog': 8.3.1(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@18.19.64)
       '@types/node': 18.19.64
@@ -6243,8 +6326,8 @@ snapshots:
 
   '@pioneer-platform/pioneer-discovery@0.0.15(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)':
     dependencies:
-      '@coinmasters/tokens': 3.7.72
-      '@coinmasters/types': 4.8.1
+      '@coinmasters/tokens': 3.8.2
+      '@coinmasters/types': 4.8.2
       '@pioneer-platform/loggerdog': 8.3.1(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)
       '@pioneer-platform/pioneer-caip': 9.2.37
     transitivePeerDependencies:
@@ -7171,8 +7254,6 @@ snapshots:
   '@tsconfig/node14@1.0.3': {}
 
   '@tsconfig/node16@1.0.4': {}
-
-  '@types/bchaddrjs@0.4.0': {}
 
   '@types/chrome@0.0.258':
     dependencies:
@@ -8486,9 +8567,13 @@ snapshots:
 
   callsites@3.1.0: {}
 
+  camelcase@5.3.1: {}
+
   camelcase@6.3.0: {}
 
   caniuse-lite@1.0.30001677: {}
+
+  canvas-confetti@1.9.3: {}
 
   cashaddrjs@0.4.4:
     dependencies:
@@ -8537,6 +8622,12 @@ snapshots:
   cli-spinners@2.9.2: {}
 
   cli-width@4.1.0: {}
+
+  cliui@6.0.0:
+    dependencies:
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 6.2.0
 
   clone@1.0.4: {}
 
@@ -8682,9 +8773,13 @@ snapshots:
 
   csstype@3.1.3: {}
 
+  date-fns@4.1.0: {}
+
   debug@4.3.7:
     dependencies:
       ms: 2.1.3
+
+  decamelize@1.2.0: {}
 
   decompress-response@6.0.0:
     dependencies:
@@ -8719,6 +8814,8 @@ snapshots:
   detect-libc@2.0.3: {}
 
   diff@4.0.2: {}
+
+  dijkstrajs@1.0.3: {}
 
   dir-glob@3.0.1:
     dependencies:
@@ -8932,6 +9029,11 @@ snapshots:
 
   find-root@1.1.0: {}
 
+  find-up@4.1.0:
+    dependencies:
+      locate-path: 5.0.0
+      path-exists: 4.0.0
+
   focus-trap@7.5.4:
     dependencies:
       tabbable: 6.2.0
@@ -8955,6 +9057,14 @@ snapshots:
       combined-stream: 1.0.8
       mime-types: 2.1.35
 
+  framer-motion@11.11.11(@emotion/is-prop-valid@1.3.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      tslib: 2.8.1
+    optionalDependencies:
+      '@emotion/is-prop-valid': 1.3.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
   fs-constants@1.0.0: {}
 
   fs-extra@11.1.1:
@@ -8969,6 +9079,8 @@ snapshots:
   function-bind@1.1.2: {}
 
   gensync@1.0.0-beta.2: {}
+
+  get-caller-file@2.0.5: {}
 
   get-intrinsic@1.2.4:
     dependencies:
@@ -9129,6 +9241,8 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
     optional: true
+
+  idb@8.0.0: {}
 
   ieee754@1.2.1: {}
 
@@ -9404,6 +9518,10 @@ snapshots:
 
   locate-character@3.0.0: {}
 
+  locate-path@5.0.0:
+    dependencies:
+      p-locate: 4.1.0
+
   lodash.sortby@4.7.0: {}
 
   lodash@4.17.21: {}
@@ -9648,6 +9766,16 @@ snapshots:
 
   p-cancelable@3.0.0: {}
 
+  p-limit@2.3.0:
+    dependencies:
+      p-try: 2.2.0
+
+  p-locate@4.1.0:
+    dependencies:
+      p-limit: 2.3.0
+
+  p-try@2.2.0: {}
+
   package-json-from-dist@1.0.1: {}
 
   package-json@8.1.1:
@@ -9669,6 +9797,8 @@ snapshots:
       lines-and-columns: 1.2.4
 
   parse-node-version@1.0.1: {}
+
+  path-exists@4.0.0: {}
 
   path-key@3.1.1: {}
 
@@ -9789,6 +9919,8 @@ snapshots:
       - walrus
       - whiskers
 
+  pngjs@5.0.0: {}
+
   postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.13))(@types/node@20.11.5)(typescript@5.3.3)):
     dependencies:
       lilconfig: 3.1.2
@@ -9898,6 +10030,12 @@ snapshots:
 
   punycode@2.3.1: {}
 
+  qrcode@1.5.4:
+    dependencies:
+      dijkstrajs: 1.0.3
+      pngjs: 5.0.0
+      yargs: 15.4.1
+
   queue-microtask@1.2.3: {}
 
   queue-tick@1.0.1: {}
@@ -9969,6 +10107,10 @@ snapshots:
     dependencies:
       rc: 1.2.8
 
+  require-directory@2.1.1: {}
+
+  require-main-filename@2.0.0: {}
+
   resolve-alpn@1.2.1: {}
 
   resolve-from@4.0.0: {}
@@ -10039,6 +10181,8 @@ snapshots:
       lru-cache: 6.0.0
 
   semver@7.6.3: {}
+
+  set-blocking@2.0.0: {}
 
   set-function-length@1.2.2:
     dependencies:
@@ -10491,6 +10635,8 @@ snapshots:
       tr46: 1.0.1
       webidl-conversions: 4.0.2
 
+  which-module@2.0.1: {}
+
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
@@ -10532,6 +10678,8 @@ snapshots:
 
   xxhash-wasm@0.4.2: {}
 
+  y18n@4.0.3: {}
+
   yallist@3.1.1: {}
 
   yallist@4.0.0: {}
@@ -10539,5 +10687,24 @@ snapshots:
   yaml@1.10.2: {}
 
   yaml@2.6.0: {}
+
+  yargs-parser@18.1.3:
+    dependencies:
+      camelcase: 5.3.1
+      decamelize: 1.2.0
+
+  yargs@15.4.1:
+    dependencies:
+      cliui: 6.0.0
+      decamelize: 1.2.0
+      find-up: 4.1.0
+      get-caller-file: 2.0.5
+      require-directory: 2.1.1
+      require-main-filename: 2.0.0
+      set-blocking: 2.0.0
+      string-width: 4.2.3
+      which-module: 2.0.1
+      y18n: 4.0.3
+      yargs-parser: 18.1.3
 
   yn@3.1.1: {}

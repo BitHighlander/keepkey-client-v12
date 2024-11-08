@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Flex, Switch, Text, Avatar, useToast, Badge } from '@chakra-ui/react';
+import { Box, Button, Flex, Switch, Text, Avatar, Badge } from '@chakra-ui/react';
 import { availableChainsByWallet, ChainToNetworkId, getChainEnumValue, NetworkIdToChain } from '@coinmasters/types';
 // @ts-ignore
 import { COIN_MAP_LONG } from '@pioneer-platform/pioneer-coins';
 import { blockchainStorage, blockchainDataStorage } from '@extension/storage';
+import { toaster } from '../ui/toaster';
 
 // Styles for truncating text with ellipsis
 const middleEllipsisStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  maxWidth: '100px', // Adjust the width as needed
+  maxWidth: '100px',
 };
 
 // Function to fetch asset data from the backend via Chrome runtime
@@ -47,32 +48,24 @@ interface AssetSelectProps {
 export function AssetSelect({ setShowAssetSelect }: AssetSelectProps) {
   const [blockchains, setBlockchains] = useState<Chain[]>([]);
   const [walletOptions, setWalletOptions] = useState<string[]>(Object.keys(availableChainsByWallet));
-  const toast = useToast();
 
-  // Effect to load enabled chains on component mount
   useEffect(() => {
     onStart();
   }, []);
 
-  /**
-   * Initializes the blockchain data based on the selected wallet.
-   * Fetches missing data from the backend and updates the storage and state.
-   */
   const onStart = async () => {
     const tag = ' | onStart | ';
     try {
       const blockchainsForContext = availableChainsByWallet['KEEPKEY'];
       const allByCaip = blockchainsForContext
-        .map((chainStr: any) => {
-          const chainEnum = getChainEnumValue(chainStr);
-          const networkId = chainEnum ? ChainToNetworkId[chainEnum] : undefined;
-          return networkId;
-        })
-        .filter((networkId: string | undefined): networkId is string => networkId !== undefined);
+          .map((chainStr: any) => {
+            const chainEnum = getChainEnumValue(chainStr);
+            const networkId = chainEnum ? ChainToNetworkId[chainEnum] : undefined;
+            return networkId;
+          })
+          .filter((networkId: string | undefined): networkId is string => networkId !== undefined);
 
       let blockchainsEnabled = allByCaip;
-
-      // Get saved chains from storage
       const savedChains = await blockchainStorage.getAllBlockchains();
       if (savedChains && savedChains.length > 0) {
         blockchainsEnabled = [...new Set([...blockchainsEnabled, ...savedChains])];
@@ -88,7 +81,6 @@ export function AssetSelect({ setShowAssetSelect }: AssetSelectProps) {
           isEnabled: true,
         };
 
-        // Fetch additional asset data if name is 'unknown'
         if (blockchain.name === 'unknown') {
           const assetData = await blockchainDataStorage.getBlockchainData(networkId);
           if (assetData && assetData.name) {
@@ -103,12 +95,10 @@ export function AssetSelect({ setShowAssetSelect }: AssetSelectProps) {
       setBlockchains(newBlockchains);
     } catch (error) {
       console.error('Error initializing blockchains:', error);
-      toast({
+      toaster.create({
         title: 'Initialization Error',
         description: 'Failed to load blockchains.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
+        type: 'error',
       });
     }
   };
@@ -120,74 +110,57 @@ export function AssetSelect({ setShowAssetSelect }: AssetSelectProps) {
     const isCurrentlyEnabled = chain.isEnabled;
 
     if (isCurrentlyEnabled) {
-      // Disable the chain
       try {
         await blockchainStorage.removeBlockchain(networkId);
         await blockchainDataStorage.removeBlockchainData(networkId);
-        toast({
+        toaster.create({
           title: 'Chain Disabled',
           description: `${chain.name} has been disabled.`,
-          status: 'info',
-          duration: 3000,
-          isClosable: true,
+          type: 'info',
         });
       } catch (error) {
         console.error(`Failed to disable chain ${networkId}`, error);
-        toast({
+        toaster.create({
           title: 'Error',
           description: `Failed to disable ${chain.name}.`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
+          type: 'error',
         });
         return;
       }
     } else {
-      // Enable the chain
       try {
         await blockchainStorage.addBlockchain(networkId);
         const assetData = await getAssetData(networkId);
         console.log('assetData:', assetData);
         await blockchainDataStorage.addBlockchainData(networkId, assetData);
-        toast({
+        toaster.create({
           title: 'Chain Enabled',
           description: `${chain.name} has been enabled.`,
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
+          type: 'success',
         });
       } catch (error) {
         console.error(`Failed to enable chain ${networkId}`, error);
-        toast({
+        toaster.create({
           title: 'Error',
           description: `Failed to enable ${chain.name}.`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
+          type: 'error',
         });
         return;
       }
     }
 
-    // Update the state
     setBlockchains(prevBlockchains =>
-      prevBlockchains.map(c => (c.networkId === networkId ? { ...c, isEnabled: !c.isEnabled } : c)),
+        prevBlockchains.map(c => (c.networkId === networkId ? { ...c, isEnabled: !c.isEnabled } : c)),
     );
   };
 
-  /**
-   * Selects all chains by enabling them and updating storage.
-   */
   const selectAllChains = async () => {
     const tag = ' | selectAllChains | ';
     try {
-      // Enable all chains in storage
-
       const allnetworkIds = blockchains.map(chain => chain.networkId);
       await blockchainStorage.addBlockchains(allnetworkIds);
       console.log(tag, 'All chains added to storage:', allnetworkIds);
 
-      // Fetch and store data for all chains
       for (const networkId of allnetworkIds) {
         try {
           const assetData = await getAssetData(networkId);
@@ -195,247 +168,199 @@ export function AssetSelect({ setShowAssetSelect }: AssetSelectProps) {
           console.log(tag, `Blockchain data added for ${networkId}`);
         } catch (error) {
           console.error(`Failed to fetch data for networkId ${networkId}`, error);
-          toast({
+          toaster.create({
             title: 'Error',
             description: `Failed to fetch data for chain ${networkId}`,
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
+            type: 'error',
           });
         }
       }
 
-      // Update the state to enable all chains
       setBlockchains(prevBlockchains =>
-        prevBlockchains.map(chain => ({
-          ...chain,
-          isEnabled: true,
-        })),
+          prevBlockchains.map(chain => ({
+            ...chain,
+            isEnabled: true,
+          })),
       );
 
-      toast({
+      toaster.create({
         title: 'All Chains Selected',
         description: 'All available chains have been enabled.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+        type: 'success',
       });
     } catch (error) {
       console.error('Failed to select all chains', error);
-      toast({
+      toaster.create({
         title: 'Error',
         description: 'Failed to select all chains.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
+        type: 'error',
       });
     }
   };
 
-  /**
-   * Unselects all chains by disabling them and updating storage.
-   */
   const unselectAllChains = async () => {
     const tag = ' | unselectAllChains | ';
     try {
-      // Disable all chains in storage
-
       const allnetworkIds = blockchains.map(chain => chain.networkId);
       await blockchainStorage.removeBlockchains(allnetworkIds);
       console.log(tag, 'All chains removed from storage:', allnetworkIds);
 
-      // Remove blockchain data for all chains
       for (const networkId of allnetworkIds) {
         try {
           await blockchainDataStorage.removeBlockchainData(networkId);
           console.log(tag, `Blockchain data removed for ${networkId}`);
         } catch (error) {
           console.error(`Failed to remove data for networkId ${networkId}`, error);
-          toast({
+          toaster.create({
             title: 'Error',
             description: `Failed to remove data for chain ${networkId}`,
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
+            type: 'error',
           });
         }
       }
 
-      // Update the state to disable all chains
       setBlockchains(prevBlockchains =>
-        prevBlockchains.map(chain => ({
-          ...chain,
-          isEnabled: false,
-        })),
+          prevBlockchains.map(chain => ({
+            ...chain,
+            isEnabled: false,
+          })),
       );
 
-      toast({
+      toaster.create({
         title: 'All Chains Unselected',
         description: 'All available chains have been disabled.',
-        status: 'info',
-        duration: 3000,
-        isClosable: true,
+        type: 'info',
       });
     } catch (error) {
       console.error('Failed to unselect all chains', error);
-      toast({
+      toaster.create({
         title: 'Error',
         description: 'Failed to unselect all chains.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
+        type: 'error',
       });
     }
   };
 
-  /**
-   * Handles the continuation action, such as closing the modal.
-   */
   const handleContinue = async () => {
-    await loadEnabledChains(); // Reload enabled chains from storage
-    setShowAssetSelect(false); // Close the modal or asset selection view
-    toast({
+    await loadEnabledChains();
+    setShowAssetSelect(false);
+    toaster.create({
       title: 'Selection Updated',
       description: 'Your asset selections have been updated.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
+      type: 'success',
     });
   };
 
-  /**
-   * Renders a single blockchain item with its details and toggle switch.
-   * @param chain - The blockchain data to render.
-   */
   const renderChain = (chain: Chain) => (
-    <Flex
-      key={chain.networkId}
-      alignItems="center"
-      justifyContent="space-between"
-      p={2}
-      borderBottomWidth="1px"
-      borderColor="gray.200">
-      <Flex alignItems="center">
-        <Avatar size="sm" src={chain.image} mr={4} />
-        <Text fontWeight="bold">{chain.name}</Text>
+      <Flex
+          key={chain.networkId}
+          alignItems="center"
+          justifyContent="space-between"
+          p={2}
+          borderBottomWidth="1px"
+          borderColor="gray.200">
+        <Flex alignItems="center">
+          <Avatar size="sm" src={chain.image} mr={4} />
+          <Text fontWeight="bold">{chain.name}</Text>
+        </Flex>
+        <Flex alignItems="center">
+          <Badge mr={4}>
+            <Text fontSize="xs" style={middleEllipsisStyle}>
+              {chain.networkId}
+            </Text>
+          </Badge>
+          <Switch isChecked={chain.isEnabled} onChange={() => toggleChain(chain.networkId)} />
+        </Flex>
       </Flex>
-      <Flex alignItems="center">
-        <Badge mr={4}>
-          <Text fontSize="xs" style={middleEllipsisStyle}>
-            {chain.networkId}
-          </Text>
-        </Badge>
-        <Switch isChecked={chain.isEnabled} onChange={() => toggleChain(chain.networkId)} />
-      </Flex>
-    </Flex>
   );
 
-  // Group and sort chains by type
   const { UTXO, EVM, others } = blockchains.reduce(
-    (acc: any, chain: Chain) => {
-      if (chain.networkId.startsWith('bip122:')) acc.UTXO.push(chain);
-      else if (chain.networkId.startsWith('eip155:')) acc.EVM.push(chain);
-      else acc.others.push(chain);
-      return acc;
-    },
-    { UTXO: [] as Chain[], EVM: [] as Chain[], others: [] as Chain[] },
+      (acc: any, chain: Chain) => {
+        if (chain.networkId.startsWith('bip122:')) acc.UTXO.push(chain);
+        else if (chain.networkId.startsWith('eip155:')) acc.EVM.push(chain);
+        else acc.others.push(chain);
+        return acc;
+      },
+      { UTXO: [] as Chain[], EVM: [] as Chain[], others: [] as Chain[] },
   );
 
-  /**
-   * Opens a new tab to add an EVM chain.
-   */
   const handleAddEvmChain = () => {
     console.log('Add EVM Chain button clicked');
     window.open('https://chainlist.org/', '_blank');
   };
 
-  /**
-   * Handles the refresh action to reload blockchains.
-   */
   const handleRefresh = async () => {
     const tag = ' | handleRefresh | ';
     try {
-      toast({
+      toaster.create({
         title: 'Refreshing',
         description: 'Refreshing the blockchain list...',
-        status: 'info',
-        duration: 2000,
-        isClosable: true,
+        type: 'info',
       });
       await onStart();
-      toast({
+      toaster.create({
         title: 'Refreshed',
         description: 'Blockchain list has been refreshed.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+        type: 'success',
       });
     } catch (error) {
       console.error(tag, 'Error during refresh:', error);
-      toast({
+      toaster.create({
         title: 'Refresh Error',
         description: 'Failed to refresh blockchain list.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
+        type: 'error',
       });
     }
   };
 
   return (
-    <Box>
-      {/* Select All, Unselect All, and Refresh Buttons */}
-      <Flex justifyContent="space-between" mb={4}>
-        <Button size="sm" variant="outline" colorScheme="green" onClick={selectAllChains}>
-          Select All
-        </Button>
-        <Button size="sm" variant="outline" colorScheme="red" onClick={unselectAllChains}>
-          Unselect All
-        </Button>
-        {/* Refresh Button */}
-        <Button size="sm" variant="outline" colorScheme="blue" onClick={handleRefresh}>
-          Refresh
-        </Button>
-      </Flex>
-
-      {/* UTXO Chains Section */}
-      {UTXO.length > 0 && (
-        <>
-          <Text fontSize="xl" mb={4}>
-            UTXO Chains
-          </Text>
-          {UTXO.map(renderChain)}
-        </>
-      )}
-
-      {/* EVM Chains Section */}
-      {EVM.length > 0 && (
-        <>
-          <Text fontSize="xl" my={4}>
-            EVM Chains
-          </Text>
-          {EVM.map(renderChain)}
-          <Button mt={2} colorScheme="blue" onClick={handleAddEvmChain}>
-            Add an EVM Chain
+      <Box>
+        <Flex justifyContent="space-between" mb={4}>
+          <Button size="sm" variant="outline" colorScheme="green" onClick={selectAllChains}>
+            Select All
           </Button>
-        </>
-      )}
+          <Button size="sm" variant="outline" colorScheme="red" onClick={unselectAllChains}>
+            Unselect All
+          </Button>
+          <Button size="sm" variant="outline" colorScheme="blue" onClick={handleRefresh}>
+            Refresh
+          </Button>
+        </Flex>
 
-      {/* Other Chains Section */}
-      {others.length > 0 && (
-        <>
-          <Text fontSize="xl" my={4}>
-            Other Chains
-          </Text>
-          {others.map(renderChain)}
-        </>
-      )}
+        {UTXO.length > 0 && (
+            <>
+              <Text fontSize="xl" mb={4}>
+                UTXO Chains
+              </Text>
+              {UTXO.map(renderChain)}
+            </>
+        )}
 
-      {/* Continue/Update Button */}
-      <Button colorScheme="blue" onClick={handleContinue} mt={4} width="100%">
-        Continue/Update
-      </Button>
-    </Box>
+        {EVM.length > 0 && (
+            <>
+              <Text fontSize="xl" my={4}>
+                EVM Chains
+              </Text>
+              {EVM.map(renderChain)}
+              <Button mt={2} colorScheme="blue" onClick={handleAddEvmChain}>
+                Add an EVM Chain
+              </Button>
+            </>
+        )}
+
+        {others.length > 0 && (
+            <>
+              <Text fontSize="xl" my={4}>
+                Other Chains
+              </Text>
+              {others.map(renderChain)}
+            </>
+        )}
+
+        <Button colorScheme="blue" onClick={handleContinue} mt={4} width="100%">
+          Continue/Update
+        </Button>
+      </Box>
   );
 }
 

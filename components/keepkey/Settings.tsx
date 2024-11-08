@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { VStack, HStack, Avatar, Text, Switch, Link, Button, Image, Box, useToast } from '@chakra-ui/react';
+import { VStack, HStack, Avatar, Text, Switch, Link, Button, Image, Box } from '@chakra-ui/react';
 import { maskingSettingsStorage } from '@extension/storage'; // Import your custom storage
+import { toaster } from "../ui/toaster"
 
 const Settings = () => {
-  const toast = useToast(); // For showing a success/failure message
   const [maskingSettings, setMaskingSettings] = useState({
     enableMetaMaskMasking: false,
     enableXfiMasking: false,
@@ -49,21 +49,21 @@ const Settings = () => {
   const handleForceReset = () => {
     chrome.runtime.sendMessage({ type: 'RESET_APP' }, response => {
       if (response?.success) {
-        toast({
+        toaster.create({
           title: 'App Reset',
           description: 'The app has been reset successfully. Please reconnect your wallet.',
           status: 'success',
           duration: 5000,
           isClosable: true,
-        });
+        })
       } else {
-        toast({
+        toaster.create({
           title: 'Reset Failed',
           description: 'Failed to reset the app. Please try again.',
           status: 'error',
           duration: 5000,
           isClosable: true,
-        });
+        })
       }
     });
   };

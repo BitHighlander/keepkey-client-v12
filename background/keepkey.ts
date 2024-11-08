@@ -8,8 +8,8 @@ import { keepKeyApiKeyStorage, pioneerKeyStorage } from '@extension/storage'; //
 // @ts-ignore
 import { SDK } from '@coinmasters/pioneer-sdk';
 // @ts-ignore
-import DB from '@coinmasters/pioneer-db';
-const db = new DB({});
+// import DB from '@coinmasters/pioneer-db';
+// const db = new DB({});
 import { v4 as uuidv4 } from 'uuid';
 
 const TAG = ' | KeepKey | ';
@@ -53,16 +53,20 @@ export const onStartKeepkey = async function () {
       'OP',
     ];
 
-    await db.init({});
-    //console.log(tag, 'Database initialized');
-    let txs = await db.getAllTransactions();
-    console.log(tag, 'txs: ', txs);
+    // await db.init({});
+    // //console.log(tag, 'Database initialized');
+    // let txs = await db.getAllTransactions();
+    // console.log(tag, 'txs: ', txs);
+    //
+    // let pubkeys = await db.getPubkeys({});
+    // console.log(tag, 'pubkeys: ', pubkeys);
+    //
+    // let balances = await db.getBalances({});
+    // console.log(tag, 'balances: ', balances);
 
-    let pubkeys = await db.getPubkeys({});
-    console.log(tag, 'pubkeys: ', pubkeys);
-
-    let balances = await db.getBalances({});
-    console.log(tag, 'balances: ', balances);
+    // let db = []
+    // let txs = []
+    // let pubkeys = []
 
     const allByCaip = chains.map(chainStr => {
       const chain = getChainEnumValue(chainStr);
@@ -207,46 +211,40 @@ export const onStartKeepkey = async function () {
       wss,
       paths,
       blockchains: allByCaip,
-      // @ts-ignore
-      ethplorerApiKey: 'EK-xs8Hj-qG4HbLY-LoAu7',
-      // @ts-ignore
-      covalentApiKey: 'cqt_rQ6333MVWCVJFVX3DbCCGMVqRH4q',
-      // @ts-ignore
-      utxoApiKey: 'B_s9XK926uwmQSGTDEcZB3vSAmt5t2',
-      // @ts-ignore
-      walletConnectProjectId: '18224df5f72924a5f6b3569fbd56ae16',
     };
 
     let app = new SDK(spec, config);
 
     const walletsVerbose: any = [];
-    const { keepkeyWallet } = await import('@coinmasters/wallet-keepkey');
-    const walletKeepKey = {
-      type: WalletOption.KEEPKEY,
-      icon: 'https://pioneers.dev/coins/keepkey.png',
-      chains: availableChainsByWallet[WalletOption.KEEPKEY],
-      wallet: keepkeyWallet,
-      status: 'offline',
-      isConnected: false,
-    };
-    walletsVerbose.push(walletKeepKey);
+
     let resultInit = await app.init(walletsVerbose, {});
     console.log(tag, 'resultInit:', resultInit);
     console.log(tag, 'wallets: ', app.wallets.length);
-
-    let pairObject = {
-      type: WalletOption.KEEPKEY,
-      blockchains: allByCaip,
-    };
-    resultInit = await app.pairWallet(pairObject);
-    console.log(tag, 'result pair wallet: ', resultInit);
-    console.log(tag, 'app.keepkeyApiKey:', app.keepkeyApiKey);
-    console.log(tag, 'keepkeyApiKey:', keepkeyApiKey);
     if (app.keepkeyApiKey !== keepkeyApiKey) {
       console.log('SAVING API KEY. ');
       keepKeyApiKeyStorage.saveApiKey(app.keepkeyApiKey);
     }
 
+    //TODO get paths from storage
+
+    //get paths for wallet
+
+    paths.push({
+      note:"Bitcoin account 0 segwit (p2sh)",
+      networks: ['bip122:000000000019d6689c085ae165831e93'],
+      script_type:"p2sh",
+      available_scripts_types:['p2pkh','p2sh','p2wpkh','p2sh-p2wpkh'],
+      type:"zpub",
+      addressNList: [0x80000000 + 84, 0x80000000 + 0, 0x80000000 + 0],
+      addressNListMaster: [0x80000000 + 84, 0x80000000 + 0, 0x80000000 + 0, 0, 0],
+      curve: 'secp256k1'
+    })
+
+    await app.setPaths(paths)
+
+    //get status
+
+    // let app = {}
     return app;
   } catch (e) {
     console.error(e);

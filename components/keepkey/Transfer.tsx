@@ -1,49 +1,43 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Avatar,
   Badge,
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Grid,
   Heading,
   Input,
   Spinner,
   Text,
   VStack,
-  useToast,
-  useColorModeValue,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Field } from "../ui/field";
+import { toaster } from '../ui/toaster';
 import { NetworkIdToChain } from '@pioneer-platform/pioneer-caip';
 import { COIN_MAP_LONG } from '@pioneer-platform/pioneer-coins';
 //@ts-ignore
-import confetti from 'canvas-confetti'; // Make sure to install the confetti package
+import confetti from 'canvas-confetti';
 
 const TAG = ' | Transfer | ';
 
 const convertToHex = (amountInEther: string) => {
-  const weiMultiplier = BigInt(1e18); // 1 Ether = 1e18 Wei
-  const amountInWei = BigInt(parseFloat(amountInEther || '0') * 1e18); // Convert Ether to Wei
-
-  // Convert the amount in Wei to a hex string
+  const weiMultiplier = BigInt(1e18);
+  const amountInWei = BigInt(parseFloat(amountInEther || '0') * 1e18);
   return '0x' + amountInWei.toString(16);
 };
 
 export function Transfer({}: any): JSX.Element {
-  const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [inputAmount, setInputAmount] = useState(''); // Initialize as an empty string
-  const [inputAmountUsd, setInputAmountUsd] = useState(''); // Initialize as an empty string
+  const [inputAmount, setInputAmount] = useState('');
+  const [inputAmountUsd, setInputAmountUsd] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [memo, setMemo] = useState('');
   const [assetContext, setAssetContext] = useState<any>({});
@@ -57,11 +51,7 @@ export function Transfer({}: any): JSX.Element {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const bgColor = useColorModeValue('white', 'gray.700');
-  const headingColor = useColorModeValue('teal.500', 'teal.300');
-
   useEffect(() => {
-    // Request asset context and set initial state
     chrome.runtime.sendMessage({ type: 'GET_ASSET_CONTEXT' }, response => {
       setAssetContext(response.assets);
       if (response?.assets.icon) setAvatarUrl(response.assets.icon);
@@ -75,12 +65,10 @@ export function Transfer({}: any): JSX.Element {
         setMaxSpendable(maxSpendableResponse.maxSpendable);
         setLoadingMaxSpendable(false);
       } else {
-        toast({
+        toaster.create({
           title: 'Error',
           description: 'Failed to fetch max spendable amount.',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
+          type: 'error',
         });
         setLoadingMaxSpendable(false);
       }
@@ -91,43 +79,25 @@ export function Transfer({}: any): JSX.Element {
     onStart();
   }, []);
 
-  const handleInputFocus = () => {
-    // Optional: Clear input when focusing
-    // setInputAmount('');
-    // setInputAmountUsd('');
-  };
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-
-    setIsMax(false); // Reset isMax if user manually changes input
-
+    setIsMax(false);
     if (useUsdInput) {
       setInputAmountUsd(value);
-
       const parsedValue = parseFloat(value);
       if (!isNaN(parsedValue) && priceUsd) {
-        setInputAmount((parsedValue / priceUsd).toFixed(4)); // 4 decimal places for NATIVE
+        setInputAmount((parsedValue / priceUsd).toFixed(4));
       } else {
         setInputAmount('');
       }
     } else {
       setInputAmount(value);
-
       const parsedValue = parseFloat(value);
       if (!isNaN(parsedValue) && priceUsd) {
-        setInputAmountUsd((parsedValue * priceUsd).toFixed(2)); // 2 decimal places for USD
+        setInputAmountUsd((parsedValue * priceUsd).toFixed(2));
       } else {
         setInputAmountUsd('');
       }
-    }
-  };
-
-  const handleInputBlur = () => {
-    if (!useUsdInput && inputAmount && !isNaN(parseFloat(inputAmount))) {
-      setInputAmount(parseFloat(inputAmount).toFixed(4)); // 4 decimal places for NATIVE
-    } else if (useUsdInput && inputAmountUsd && !isNaN(parseFloat(inputAmountUsd))) {
-      setInputAmountUsd(parseFloat(inputAmountUsd).toFixed(2)); // 2 decimal places for USD
     }
   };
 
@@ -162,9 +132,7 @@ export function Transfer({}: any): JSX.Element {
           const chainFromNetworkId = NetworkIdToChain[assetContext.networkId];
           if (chainFromNetworkId) {
             chain = chainFromNetworkId.toLowerCase();
-            console.log('chain2: ', chain.toUpperCase());
             const coinMapEntry = COIN_MAP_LONG[chain.toUpperCase()];
-            console.log('coinMapEntry: ', coinMapEntry);
             if (coinMapEntry) {
               chain = coinMapEntry.toLowerCase();
             } else {
@@ -184,54 +152,47 @@ export function Transfer({}: any): JSX.Element {
         chain,
         siteUrl: 'KeepKey Browser Extension',
       };
-      console.log('requestInfo: ', requestInfo);
 
       chrome.runtime.sendMessage(
-        {
-          type: 'WALLET_REQUEST',
-          requestInfo,
-        },
-        response => {
-          if (response.txHash) {
-            confetti();
-            toast({
-              title: 'Transaction Successful',
-              description: `Transaction ID: ${response.txHash}`,
-              status: 'success',
-              duration: 5000,
-              isClosable: true,
-            });
-          } else if (response.error) {
-            toast({
-              title: 'Error',
-              description: response.error,
-              status: 'error',
-              duration: 5000,
-              isClosable: true,
-            });
-          }
-        },
+          {
+            type: 'WALLET_REQUEST',
+            requestInfo,
+          },
+          response => {
+            if (response.txHash) {
+              confetti();
+              toaster.create({
+                title: 'Transaction Successful',
+                description: `Transaction ID: ${response.txHash}`,
+                type: 'success',
+              });
+            } else if (response.error) {
+              toaster.create({
+                title: 'Error',
+                description: response.error,
+                type: 'error',
+              });
+            }
+          },
       );
     } catch (error) {
       console.error(error);
-      toast({
+      toaster.create({
         title: 'Error',
         description: error.toString(),
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
+        type: 'error',
       });
     } finally {
       setIsSubmitting(false);
       onClose();
     }
-  }, [inputAmount, recipient, memo, isMax, assetContext?.networkId, toast]);
+  }, [inputAmount, recipient, memo, isMax, assetContext?.networkId]);
 
   const setMaxAmount = () => {
     const maxAmount = maxSpendable;
-    setInputAmount(parseFloat(maxAmount).toFixed(4)); // 4 decimal places for NATIVE
-    setInputAmountUsd((parseFloat(maxAmount) * (priceUsd || 1)).toFixed(2)); // 2 decimal places for USD
-    setIsMax(true); // Set isMax to true when Max button is clicked
+    setInputAmount(parseFloat(maxAmount).toFixed(4));
+    setInputAmountUsd((parseFloat(maxAmount) * (priceUsd || 1)).toFixed(2));
+    setIsMax(true);
   };
 
   const formatMaxSpendable = (amount: string) => {
@@ -240,104 +201,94 @@ export function Transfer({}: any): JSX.Element {
 
   if (loadingMaxSpendable) {
     return (
-      <Flex align="center" justify="center" height="100vh">
-        <Box p={10} borderRadius="md" boxShadow="lg" bg={bgColor}>
-          <Flex align="center" justify="center">
-            <Spinner size="xl" />
-            <Text ml={4}>Calculating max spendable amount...</Text>
-          </Flex>
-        </Box>
-      </Flex>
+        <Flex align="center" justify="center" height="100vh">
+          <Box p={10} borderRadius="md" boxShadow="lg">
+            <Flex align="center" justify="center">
+              <Spinner size="xl" />
+              <Text ml={4}>Calculating max spendable amount...</Text>
+            </Flex>
+          </Box>
+        </Flex>
     );
   }
 
   return (
-    <>
-      <VStack align="start" borderRadius="md" p={4} spacing={4} bg={bgColor} margin="0 auto">
-        <Heading as="h1" mb={2} size="md" color={headingColor}>
-          Send Crypto!
-        </Heading>
+      <>
+        <VStack align="start" borderRadius="md" p={4} spacing={4} margin="0 auto">
+          <Heading as="h1" mb={2} size="md">
+            Send Crypto!
+          </Heading>
 
-        <Flex align="center" direction="row" gap={4}>
-          <Avatar size="md" src={avatarUrl} />
-          <Box>
-            <Text mb={1}>
-              Asset: <Badge colorScheme="green">{assetContext?.name}</Badge>
-            </Text>
-            <Text mb={1}>
-              Chain: <Badge colorScheme="green">{assetContext?.networkId}</Badge>
-            </Text>
-            <Text mb={1}>
-              Symbol: <Badge colorScheme="green">{assetContext?.symbol}</Badge>
-            </Text>
-            <Text mb={1}>
-              Max Spendable: {formatMaxSpendable(maxSpendable)} {assetContext?.symbol || 'Symbol'}
-            </Text>
-            <Badge colorScheme="teal" fontSize="sm">
-              ${(parseFloat(maxSpendable) * (priceUsd || 1)).toFixed(2)} USD
-            </Badge>
-          </Box>
-        </Flex>
+          <Flex align="center" direction="row" gap={4}>
+            <Avatar size="md" src={avatarUrl} />
+            <Box>
+              <Text mb={1}>
+                Asset: <Badge colorScheme="green">{assetContext?.name}</Badge>
+              </Text>
+              <Text mb={1}>
+                Chain: <Badge colorScheme="green">{assetContext?.networkId}</Badge>
+              </Text>
+              <Text mb={1}>
+                Symbol: <Badge colorScheme="green">{assetContext?.symbol}</Badge>
+              </Text>
+              <Text mb={1}>
+                Max Spendable: {formatMaxSpendable(maxSpendable)} {assetContext?.symbol || 'Symbol'}
+              </Text>
+              <Badge colorScheme="teal" fontSize="sm">
+                ${(parseFloat(maxSpendable) * (priceUsd || 1)).toFixed(2)} USD
+              </Badge>
+            </Box>
+          </Flex>
 
-        <Grid gap={6} templateColumns="repeat(1, 1fr)" w="full">
-          <FormControl>
-            <FormLabel>Recipient:</FormLabel>
-            <Input onChange={handleRecipientChange} placeholder="Address" value={recipient} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Input Amount:</FormLabel>
-            <Flex align="center">
-              <Input
-                onChange={handleInputChange}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                placeholder="0.0000"
-                value={useUsdInput ? inputAmountUsd : inputAmount}
-              />
-              <Button ml={2} onClick={() => setUseUsdInput(!useUsdInput)}>
-                {useUsdInput ? 'USD' : assetContext?.symbol || 'Symbol'}
+          <Grid gap={6} templateColumns="repeat(1, 1fr)" w="full">
+            <Field label="Recipient">
+              <Input onChange={handleRecipientChange} placeholder="Address" value={recipient} />
+            </Field>
+            <Field label="Input Amount">
+              <Flex align="center">
+                <Input
+                    onChange={handleInputChange}
+                    placeholder="0.0000"
+                    value={useUsdInput ? inputAmountUsd : inputAmount}
+                />
+                <Button ml={2} onClick={() => setUseUsdInput(!useUsdInput)}>
+                  {useUsdInput ? 'USD' : assetContext?.symbol || 'Symbol'}
+                </Button>
+                <Button ml={2} onClick={setMaxAmount}>
+                  Max
+                </Button>
+              </Flex>
+            </Field>
+          </Grid>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button colorScheme="green" w="full" mt={4} isDisabled={isSubmitting || !inputAmount || !recipient}>
+                {isSubmitting ? 'Sending...' : 'Send'}
               </Button>
-              <Button ml={2} onClick={setMaxAmount}>
-                Max
-              </Button>
-            </Flex>
-          </FormControl>
-        </Grid>
-
-        <Button
-          colorScheme="green"
-          w="full"
-          mt={4}
-          onClick={onOpen}
-          isDisabled={isSubmitting || !inputAmount || !recipient}>
-          {isSubmitting ? 'Sending...' : 'Send'}
-        </Button>
-      </VStack>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirm Transaction</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Recipient: {recipient}</Text>
-            <Text>
-              Amount: {inputAmount} {assetContext?.symbol || 'Symbol'}
-            </Text>
-            <Text>Amount (USD): ${inputAmountUsd}</Text>
-            {memo && <Text>Memo: {memo}</Text>}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="green" onClick={handleSend} isLoading={isSubmitting}>
-              Confirm
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>Confirm Transaction</DialogHeader>
+              <DialogBody>
+                <Text>Recipient: {recipient}</Text>
+                <Text>
+                  Amount: {inputAmount} {assetContext?.symbol || 'Symbol'}
+                </Text>
+                <Text>Amount (USD): ${inputAmountUsd}</Text>
+                {memo && <Text>Memo: {memo}</Text>}
+              </DialogBody>
+              <DialogFooter>
+                <Button colorScheme="red" mr={3} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme="green" onClick={handleSend} isLoading={isSubmitting}>
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </VStack>
+      </>
   );
 }
 

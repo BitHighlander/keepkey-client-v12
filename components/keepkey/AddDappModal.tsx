@@ -1,20 +1,23 @@
-// AddDappModal.tsx
 import React, { useState } from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Input,
   Button,
   Text,
   Avatar,
   Flex,
-  useToast,
 } from '@chakra-ui/react';
+import {
+  DialogRoot,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+  DialogCloseTrigger,
+} from "../ui/dialog";
+import { toaster } from "../ui/toaster";
+
 import { dappStorage } from '@extension/storage';
 
 interface AddDappModalProps {
@@ -28,12 +31,14 @@ export function AddDappModal({ networkId, isOpen, onClose, onSave }: AddDappModa
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const toast = useToast();
   const defaultIcon = 'https://pioneers.dev/coins/ethereum.png';
 
   const handleSave = async () => {
     if (!url || !name) {
-      toast({ title: 'Name and URL are required', status: 'error', duration: 3000 });
+      toaster.create({
+        title: 'Name and URL are required',
+        type: 'error',
+      });
       return;
     }
 
@@ -48,42 +53,64 @@ export function AddDappModal({ networkId, isOpen, onClose, onSave }: AddDappModa
       setName('');
       setDescription('');
       onClose();
-      toast({ title: 'Dapp added successfully', status: 'success', duration: 3000 });
+      toaster.create({
+        title: 'Dapp added successfully',
+        type: 'success',
+      });
     } catch (error) {
-      toast({ title: 'Failed to add dApp', status: 'error', duration: 3000 });
+      toaster.create({
+        title: 'Failed to add dApp',
+        type: 'error',
+      });
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <Flex align="center">
-            <Avatar src="https://pioneers.dev/coins/pioneerMan.png" size="sm" mr={2} />
-            <Text>Discovery</Text>
-          </Flex>
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Input placeholder="Enter dApp Name" value={name} onChange={e => setName(e.target.value)} mb={3} />
-          <Input placeholder="Enter dApp URL" value={url} onChange={e => setUrl(e.target.value)} type="url" mb={3} />
-          <Input
-            placeholder="Sample description"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            mb={3}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSave}>
-            Save
+      <DialogRoot open={isOpen} onOpenChange={onClose}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm">
+            Open Dialog
           </Button>
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              <Flex align="center">
+                <Avatar src="https://pioneers.dev/coins/pioneerMan.png" size="sm" mr={2} />
+                <Text>Discovery</Text>
+              </Flex>
+            </DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <Input
+                placeholder="Enter dApp Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                mb={3}
+            />
+            <Input
+                placeholder="Enter dApp URL"
+                value={url}
+                onChange={e => setUrl(e.target.value)}
+                type="url"
+                mb={3}
+            />
+            <Input
+                placeholder="Sample description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                mb={3}
+            />
+          </DialogBody>
+          <DialogFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+              Save
+            </Button>
+            <DialogCloseTrigger asChild>
+              <Button variant="ghost">Cancel</Button>
+            </DialogCloseTrigger>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
   );
 }
