@@ -1,4 +1,5 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
+import { KEEPKEY_STATE } from '../state'; // Adjust the import path if necessary
 
 const HIDDEN_NUMBER = 541
 
@@ -15,8 +16,9 @@ const handler: PlasmoMessaging.MessageHandler<
     const { input } = req.body
 
     console.log('input: ',input)
-    let output  = input * HIDDEN_NUMBER
-    res.send(output)
+    // let output  = input * HIDDEN_NUMBER
+    //@ts-ignore
+    res.send({ state: KEEPKEY_STATE });
 }
 
 export default handler

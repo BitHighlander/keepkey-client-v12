@@ -75,6 +75,16 @@ function App() {
                     console.error('Failed to open sidebar:', response?.error);
                 }
             });
+
+            //@ts-ignore
+            const resp = await sendToBackground({
+                name: "get-keepkey-state",
+                body: {
+                    input: txInput
+                }
+            })
+            console.log('resp: ', resp)
+            setKeepkeyState(resp.state)
         } catch (e) {
             console.error(e);
         } finally {
@@ -116,7 +126,8 @@ function App() {
             case 1:
             case 2:
             case 3:
-                return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
+                return <div>Loading</div>
+                // return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
             case 4:
                 return <Connect setIsConnecting={setIsConnecting} />;
             case 5:
@@ -187,15 +198,10 @@ function App() {
 
 
             <div>
-                <input
-                    type="number"
-                    value={txInput}
-                    onChange={(e) => setTxInput(e.target.valueAsNumber)}
-                />
-
                 <Button variant="outline" size="sm"
                     onClick={async () => {
                         console.log('Button Pushed')
+                        //@ts-ignore
                         const resp = await sendToBackground({
                             name: "get-keepkey-state",
                             body: {
@@ -203,13 +209,11 @@ function App() {
                             }
                         })
                         console.log('resp: ', resp)
-                        setTxHash(resp)
+                        setKeepkeyState(resp.state)
                     }}>
-                    Hash TX
+                    Get State
                 </Button>
 
-                <p>TX HASH: {txHash}</p>
-                <hr />
 
                 {/*<input value={selector} onChange={(e) => setSelector(e.target.value)} />*/}
 
