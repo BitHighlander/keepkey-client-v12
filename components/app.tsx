@@ -193,38 +193,39 @@ function App() {
                     onChange={(e) => setTxInput(e.target.valueAsNumber)}
                 />
 
-                <button
+                <Button variant="outline" size="sm"
                     onClick={async () => {
+                        console.log('Button Pushed')
                         const resp = await sendToBackground({
-                            name: "hash-tx",
+                            name: "get-keepkey-state",
                             body: {
                                 input: txInput
                             }
                         })
+                        console.log('resp: ', resp)
                         setTxHash(resp)
                     }}>
                     Hash TX
-                </button>
+                </Button>
 
                 <p>TX HASH: {txHash}</p>
                 <hr />
 
-                <input value={selector} onChange={(e) => setSelector(e.target.value)} />
+                {/*<input value={selector} onChange={(e) => setSelector(e.target.value)} />*/}
 
-                <button
-                    onClick={async () => {
-                        const csResponse = await sendToContentScript({
-                            name: "query-selector-text",
-                            body: selector
-                        })
-                        setCsData(csResponse)
-                    }}>
-                    Query Text on Web Page
-                </button>
-                <br />
-                <label>Text Data:</label>
-                <p>{csResponse}</p>
-                <footer>Crafted by @PlasmoHQ</footer>
+                {/*<button*/}
+                {/*    onClick={async () => {*/}
+                {/*        const csResponse = await sendToContentScript({*/}
+                {/*            name: "query-selector-text",*/}
+                {/*            body: selector*/}
+                {/*        })*/}
+                {/*        setCsData(csResponse)*/}
+                {/*    }}>*/}
+                {/*    Query Text on Web Page*/}
+                {/*</button>*/}
+                {/*<br />*/}
+                {/*<label>Text Data:</label>*/}
+                {/*<p>{csResponse}</p>*/}
             </div>
 
             <DialogRoot size="cover" placement="center" motionPreset="slide-in-bottom">
