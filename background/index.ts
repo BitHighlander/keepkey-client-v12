@@ -3,7 +3,7 @@ import { handleWalletRequest } from './methods';
 import { onStartKeepkey } from './keepkey';
 import { JsonRpcProvider } from 'ethers';
 import { Chain } from '@coinmasters/types';
-
+import { startHub } from "@plasmohq/messaging/pub-sub"
 import { ChainToNetworkId } from '@pioneer-platform/pioneer-caip';
 import { requestStorage, exampleSidebarStorage, web3ProviderStorage } from '@extension/storage'; // Re-import the storage
 const TAG = ' | background/index.ts | ';
@@ -11,6 +11,10 @@ const tag = TAG + " | ";
 let KEEPKEY_STATE = 0;
 let ADDRESS = '';
 let APP: any = null;
+
+//start pub/sub
+console.log(`KeepKey - Starting Hub`)
+startHub()
 
 function updateIcon() {
     // let iconPath = './icon-128.png';

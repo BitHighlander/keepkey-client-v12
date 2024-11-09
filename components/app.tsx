@@ -1,7 +1,7 @@
 /*
      App
  */
-
+import { sendToBackgroundViaRelay } from "@plasmohq/messaging"
 import React, { useState, useEffect } from 'react';
 import {
     useDisclosure,
@@ -25,7 +25,7 @@ import {
     DialogTrigger,
 } from "./ui/dialog"
 import { FaChevronLeft, FaRedo, FaCog, FaCalendarAlt } from 'react-icons/fa';
-
+import { sendToBackground, sendToContentScript } from "@plasmohq/messaging"
 import Connect from './keepkey/Connect';
 import Loading from './keepkey/Loading';
 import Balances from './keepkey/Balances';
@@ -43,6 +43,12 @@ const stateNames: { [key: number]: string } = {
 };
 
 function App() {
+    const [txHash, setTxHash] = useState(undefined)
+    const [txInput, setTxInput] = useState(0)
+    const [selector, setSelector] = useState("#itero")
+
+    const [csResponse, setCsData] = useState("")
+    const [manifestData, setManifestData] = useState()
     const [balances, setBalances] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [keepkeyState, setKeepkeyState] = useState<number | null>(null);
@@ -51,6 +57,10 @@ function App() {
     const [showBack, setShowBack] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [a, setA] = useState(0)
+    const [b, setB] = useState(4)
+    const [addResult, setAddResult] = useState(0)
 
     const { isOpen: isSettingsOpen, onOpen: onSettingsOpen, onClose: onSettingsClose } = useDisclosure();
 
@@ -174,6 +184,48 @@ function App() {
 
             {/* Render the appropriate content */}
             {renderContent()}
+
+
+            <div>
+                <input
+                    type="number"
+                    value={txInput}
+                    onChange={(e) => setTxInput(e.target.valueAsNumber)}
+                />
+
+                <button
+                    onClick={async () => {
+                        const resp = await sendToBackground({
+                            name: "hash-tx",
+                            body: {
+                                input: txInput
+                            }
+                        })
+                        setTxHash(resp)
+                    }}>
+                    Hash TX
+                </button>
+
+                <p>TX HASH: {txHash}</p>
+                <hr />
+
+                <input value={selector} onChange={(e) => setSelector(e.target.value)} />
+
+                <button
+                    onClick={async () => {
+                        const csResponse = await sendToContentScript({
+                            name: "query-selector-text",
+                            body: selector
+                        })
+                        setCsData(csResponse)
+                    }}>
+                    Query Text on Web Page
+                </button>
+                <br />
+                <label>Text Data:</label>
+                <p>{csResponse}</p>
+                <footer>Crafted by @PlasmoHQ</footer>
+            </div>
 
             <DialogRoot size="cover" placement="center" motionPreset="slide-in-bottom">
                 <DialogTrigger asChild>
