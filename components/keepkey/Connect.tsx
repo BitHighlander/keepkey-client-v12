@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Image, Button, Card, Stack, Text, Box, Spinner } from '@chakra-ui/react';
+import { Card, Image, Stack, Text, Box, Spinner } from '@chakra-ui/react';
+import { Button } from '../ui/button'; // Adjusted import path
 
 interface ConnectProps {
   setIsConnecting: (isConnecting: boolean) => void;
@@ -20,7 +21,7 @@ const Connect: React.FC<ConnectProps> = ({ setIsConnecting }) => {
       } catch (error) {
         console.log('KeepKey endpoint not found, retrying...');
       }
-    }, 5000); // Check every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -34,7 +35,7 @@ const Connect: React.FC<ConnectProps> = ({ setIsConnecting }) => {
     setIsConnecting(true);
     setLocalIsConnecting(true);
     try {
-      chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
+      chrome.runtime.sendMessage({ type: 'ON_START' }, (response) => {
         if (chrome.runtime.lastError) {
           console.error('chrome.runtime.lastError:', chrome.runtime.lastError.message);
         } else {
@@ -52,13 +53,11 @@ const Connect: React.FC<ConnectProps> = ({ setIsConnecting }) => {
 
   const launchKeepKey = () => {
     try {
-      console.log('window: ', window);
-      console.log('window.location: ', window.location);
       if (window) {
         setTimeout(() => {
           window.location.assign('keepkey://launch');
           window.open('https://keepkey.com/launch', '_blank');
-        }, 100); // Adding a slight delay before launching the URL
+        }, 100);
       }
     } catch (error) {
       console.error('Failed to launch KeepKey:', error);
@@ -66,55 +65,51 @@ const Connect: React.FC<ConnectProps> = ({ setIsConnecting }) => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" position="relative">
-      <Card
-        borderRadius="md"
-        p={6}
-        mb={6}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        boxShadow="lg">
-        <Image src={'https://i.ibb.co/jR8WcJM/kk.gif'} alt="KeepKey" />
-        <Text fontSize="lg" mb={4}>
-          Plug in your KeepKey to get started...
-        </Text>
-        <Stack direction="column" spacing={4} mb={4}>
-          <Button colorScheme="blue" onClick={launchKeepKey}>
-            Launch KeepKey Desktop
-          </Button>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh" position="relative">
+        <Card.Root width="320px" p={6} boxShadow="lg" borderRadius="md" align="center" textAlign="center">
+          <Card.Body gap="2">
+            <Image src="https://i.ibb.co/jR8WcJM/kk.gif" alt="KeepKey" />
+            <Text fontSize="lg" mt={4}>
+              Plug in your KeepKey to get started...
+            </Text>
+            <Stack spacing={4}>
+              <Button colorScheme="blue" onClick={launchKeepKey}>
+                Launch KeepKey Desktop
+              </Button>
+              <br />
+              <Text as="h3">Already running?</Text>
+              <Button colorScheme="teal" onClick={connectKeepkey}>
+                Connect to your KeepKey
+              </Button>
+            </Stack>
+          </Card.Body>
+          <Card.Footer justifyContent="flex-end">
+            <Text fontSize="sm" mt={4}>
+              Don’t have a KeepKey?{' '}
+              <Button variant="link" color="teal.500" onClick={openKeepKeyLink}>
+                Buy a KeepKey
+              </Button>
+            </Text>
+          </Card.Footer>
+        </Card.Root>
 
-          <br />
-          <h3>Already running?</h3>
-          <Button colorScheme="teal" onClick={connectKeepkey}>
-            Connect to your KeepKey
-          </Button>
-        </Stack>
-        <Text fontSize="sm" mt={4}>
-          Dont have a KeepKey?{' '}
-          <Button variant="link" color="teal.500" onClick={openKeepKeyLink}>
-            Buy a KeepKey
-          </Button>
-        </Text>
-      </Card>
-
-      {isConnecting && (
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          bg="rgba(255, 255, 255, 0.8)"
-          zIndex={1}>
-          <Spinner size="xl" thickness="4px" color="teal.500" />
-        </Box>
-      )}
-    </Box>
+        {isConnecting && (
+            <Box
+                position="absolute"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                bg="rgba(255, 255, 255, 0.8)"
+                zIndex={1}
+            >
+              <Spinner size="xl" thickness="4px" color="teal.500" />
+            </Box>
+        )}
+      </Box>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Image, Button, Card, Stack, Text, Box, Spinner } from '@chakra-ui/react';
+import { Spinner, Text, Box, Button } from '@chakra-ui/react';
+import { Card } from '@chakra-ui/react';
 
 interface ConnectProps {
   setIsConnecting: (isConnecting: boolean) => void;
@@ -17,23 +18,20 @@ const Loading: React.FC<ConnectProps> = ({ setIsConnecting, keepkeyState }) => {
   }, [setIsConnecting]);
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-      <Card
-        borderRadius="md"
-        p={6}
-        mb={6}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        boxShadow="lg">
-        <Box textAlign="center">
-          <h2>Status: {keepkeyState}</h2>
-          <Spinner size="6xl" />
-          <Text mt={4}>Connecting to KeepKey...</Text>
-        </Box>
-      </Card>
-    </Box>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Card.Root borderRadius="md" width="320px" p={6} boxShadow="lg">
+          <Card.Body textAlign="center" gap="4">
+            <Text fontWeight="bold" fontSize="lg">Status: {keepkeyState}</Text>
+            <Spinner size="xl" />
+            <Text mt={4}>Connecting to KeepKey...</Text>
+          </Card.Body>
+          <Card.Footer justifyContent="center" pt={4}>
+            <Button variant="outline" onClick={() => setIsConnecting(false)}>
+              Cancel
+            </Button>
+          </Card.Footer>
+        </Card.Root>
+      </Box>
   );
 };
 

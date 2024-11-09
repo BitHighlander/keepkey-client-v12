@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Box, Flex, Text, VStack, Input, IconButton, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, Text, VStack, Input, IconButton, Tooltip } from '@chakra-ui/react';
 import { FaCopy } from 'react-icons/fa';
 import { toaster } from '../ui/toaster';
-
+import { Avatar } from '../ui/avatar';
 const Context = () => {
   const [currentAssetContext, setCurrentAssetContext] = useState({
     icon: 'https://pioneers.dev/coins/ethereum.png',

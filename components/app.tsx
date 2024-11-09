@@ -126,7 +126,7 @@ function App() {
             case 1:
             case 2:
             case 3:
-                return <div>Loading</div>
+                // // return <div>Loading</div>
                 // return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
             case 4:
                 return <Connect setIsConnecting={setIsConnecting} />;
