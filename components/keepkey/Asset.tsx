@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import {
   VStack,
-  Avatar,
   Box,
-  Stack,
   Flex,
   Text,
-  Button,
   Spinner,
   Badge,
   Card,
   CardBody,
+  Tabs,
+  Avatar,
+  Button,
 } from '@chakra-ui/react';
-import { Tabs } from "@chakra-ui/react";
+
+
 import { Transfer } from './Transfer';
 import { Receive } from './Receive';
-import AppStore from './AppStore'; // Import the new AppStore component
+import AppStore from './AppStore';
 
 export function Asset() {
   const [activeTab, setActiveTab] = useState<'send' | 'receive' | null>(null);
@@ -24,12 +25,10 @@ export function Asset() {
   const [pubkeys, setPubkeys] = useState<any[]>([]);
   const [asset, setAsset] = useState<any>(null);
 
-  // Fetch asset context on initial load
   useEffect(() => {
     fetchAssetContext();
   }, []);
 
-  // Subscribe to asset context updates
   useEffect(() => {
     const messageListener = (message: any) => {
       if (message.type === 'ASSET_CONTEXT_UPDATED' && message.assetContext) {
@@ -37,14 +36,12 @@ export function Asset() {
         setAsset(message.assetContext);
       }
     };
-
     chrome.runtime.onMessage.addListener(messageListener);
     return () => {
       chrome.runtime.onMessage.removeListener(messageListener);
     };
   }, []);
 
-  // Fetch balances and pubkeys when asset changes
   useEffect(() => {
     if (asset) {
       fetchBalancesAndPubkeys(asset);
@@ -84,7 +81,6 @@ export function Asset() {
       setLoading(false);
       return;
     }
-
     chrome.runtime.sendMessage(
         {
           type: 'WALLET_REQUEST',
@@ -104,7 +100,6 @@ export function Asset() {
             const balanceWei = BigInt(response.result);
             const balanceEth = Number(balanceWei) / 1e18;
             const formattedBalance = formatBalance(balanceEth);
-
             setBalances([{ balance: formattedBalance, symbol: assetLoaded.symbol }]);
           } else {
             console.error('Invalid response for balance:', response);
@@ -133,10 +128,7 @@ export function Asset() {
   };
 
   const formatBalance = (balance: number) => {
-    if (balance === 0) {
-      return '0.0000';
-    }
-    return balance.toFixed(4);
+    return balance === 0 ? '0.0000' : balance.toFixed(4);
   };
 
   const openUrl = (url: string) => {
@@ -145,8 +137,8 @@ export function Asset() {
 
   return (
       <Flex direction="column" minHeight="100vh" width="100%">
-        <Card>
-          <CardBody>
+        <Card.Root>
+          <Card.Body>
             {loading ? (
                 <Flex justifyContent="center" p={5}>
                   <Spinner size="xl" />
@@ -215,7 +207,8 @@ export function Asset() {
                                             ? asset.explorerAddressLink + '/' + pubkey.address
                                             : asset.explorerXpubLink + '/' + pubkey.pubkey,
                                     )
-                                }>
+                                }
+                            >
                               <Box>
                                 <Text>View Transaction History</Text>
                                 <Badge>
@@ -235,11 +228,10 @@ export function Asset() {
                   <Text>No asset selected (Go Back!)</Text>
                 </Flex>
             )}
-          </CardBody>
-        </Card>
+          </Card.Body>
+        </Card.Root>
 
-        {/* Push AppStore to the bottom */}
-        <Box flexGrow={1} />
+        <Box />
 
         <Box mt={4}>
           <Tabs.Root defaultValue="dapps">
@@ -247,7 +239,7 @@ export function Asset() {
               <Tabs.Trigger value="dapps">Dapps</Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="dapps">
-              <AppStore networkId={asset?.networkId} /> {/* The AppStore is now in its own component */}
+              <AppStore networkId={asset?.networkId} />
             </Tabs.Content>
           </Tabs.Root>
         </Box>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { onStartKeepkey } from '../keepkey';
 import { ChainToNetworkId } from '@pioneer-platform/pioneer-caip';
 import { Chain } from '@coinmasters/types';
+import { requestStorage, web3ProviderStorage, assetContextStorage } from '@extension/storage';
 import { EIP155_CHAINS } from '../chains';
 const TAG = ' | keepkey-request | '
 let APP = null
@@ -296,7 +297,7 @@ const handler: PlasmoMessaging.MessageHandler<RequestBody, RequestResponse> = as
                             if (currentAssetContext.networkId.includes('eip155')) {
                                 const newProvider = EIP155_CHAINS[currentAssetContext.networkId].provider;
                                 console.log('newProvider', newProvider);
-                                await web3ProviderStorage.setWeb3Provider(newProvider);
+                                await web3ProviderStorage.saveWeb3Provider(newProvider);
                             }
                         } catch (error) {
                             console.error('Error setting asset context:', error);
