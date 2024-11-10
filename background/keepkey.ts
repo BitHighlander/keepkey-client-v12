@@ -4,7 +4,7 @@
 import { AssetValue } from '@pioneer-platform/helpers';
 import { WalletOption, availableChainsByWallet, ChainToNetworkId, getChainEnumValue } from '@coinmasters/types';
 import { getPaths } from '@pioneer-platform/pioneer-coins';
-import { keepKeyApiKeyStorage, pioneerKeyStorage } from '@extension/storage'; // Re-import the storage
+import {blockchainStorage, keepKeyApiKeyStorage, pioneerKeyStorage} from '@extension/storage'; // Re-import the storage
 // @ts-ignore
 import { SDK } from '@coinmasters/pioneer-sdk';
 // @ts-ignore
@@ -77,6 +77,11 @@ export const onStartKeepkey = async function () {
     });
     console.log(tag, 'allByCaip: ', allByCaip);
     const paths = getPaths(allByCaip);
+
+    for(let i = 0; i < allByCaip.length; i++){
+      const chain = allByCaip[i]
+      blockchainStorage.addBlockchain(chain)
+    }
 
     //add paths to keepkey
     //add account 0 p2sh segwit

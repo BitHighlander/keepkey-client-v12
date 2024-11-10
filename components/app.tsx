@@ -12,7 +12,6 @@ import {
     Spinner,
     Button,
 } from '@chakra-ui/react';
-
 import {
     DialogBody,
     DialogBackdrop,
@@ -68,22 +67,30 @@ function App() {
         try {
             setIsRefreshing(true);
             setKeepkeyState(null);
-            chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
-                if (response?.success) {
-                    console.log('Sidebar opened successfully');
-                } else {
-                    console.error('Failed to open sidebar:', response?.error);
+            // chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
+            //     if (response?.success) {
+            //         console.log('Sidebar opened successfully');
+            //     } else {
+            //         console.error('Failed to open sidebar:', response?.error);
+            //     }
+            // });
+
+            //@ts-ignore
+            sendToBackground({
+                name: "keepkey-request",
+                body: {
+                    type: 'ON_START'
                 }
-            });
+            })
+
 
             //@ts-ignore
             const resp = await sendToBackground({
-                name: "get-keepkey-state",
+                name: "keepkey-request",
                 body: {
-                    input: txInput
+                    type: 'GET_KEEPKEY_STATE'
                 }
             })
-            console.log('resp: ', resp)
             setKeepkeyState(resp.state)
         } catch (e) {
             console.error(e);
@@ -130,12 +137,14 @@ function App() {
                 // return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
             case 4:
                 return <Connect setIsConnecting={setIsConnecting} />;
+                // return <>state 4</>
             case 5:
                 if (assetContext) {
                     return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
                 } else {
                     return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
                 }
+                // return <>state 5</>
             default:
                 return (
                     <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
@@ -189,8 +198,7 @@ function App() {
     return (
         <Box p={4}>
             <Text fontWeight="bold">
-                KeepKey State: {keepkeyState !== null ? keepkeyState : 'N/A'} -{' '}
-                {keepkeyState !== null ? stateNames[keepkeyState] : 'unknown'}
+                KeepKey State: {keepkeyState}
             </Text>
 
             {/* Render the appropriate content */}
@@ -203,8 +211,9 @@ function App() {
                         console.log('Button Pushed')
                         //@ts-ignore
                         const resp = await sendToBackground({
-                            name: "get-keepkey-state",
+                            name: "keepkey-request",
                             body: {
+                                type: 'GET_KEEPKEY_STATE',
                                 input: txInput
                             }
                         })
