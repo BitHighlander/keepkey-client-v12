@@ -49,7 +49,7 @@ export const onStart = async function () {
         const pubkeysEth = APP.pubkeys.filter((e: any) =>
             e.networks.includes(ChainToNetworkId[Chain.Ethereum])
         );
-
+        console.log(tag, 'pubkeysEth:', pubkeysEth)
         if (pubkeysEth.length > 0) {
             const address = pubkeysEth[0].address;
             if (address) {
