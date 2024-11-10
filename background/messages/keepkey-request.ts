@@ -129,10 +129,10 @@ const handler: PlasmoMessaging.MessageHandler<RequestBody, RequestResponse> = as
                     // Filter out extension pages and internal Chrome pages
                     const webPageTabs = tabs.filter(tab => {
                         return (
-                            tab.url &&
-                            !tab.url.startsWith('chrome://') &&
-                            !tab.url.startsWith('chrome-extension://') &&
-                            !tab.url.startsWith('about:')
+                            tab.url
+                            // !tab.url.startsWith('chrome://') &&
+                            // !tab.url.startsWith('chrome-extension://') &&
+                            // !tab.url.startsWith('about:')
                         );
                     });
 

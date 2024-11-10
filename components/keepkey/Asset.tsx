@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {
-  VStack,
   Box,
   Flex,
   Text,
   Spinner,
   Badge,
   Card,
-  CardBody,
   Tabs,
-  Avatar,
   Button,
 } from '@chakra-ui/react';
-
+import { Avatar } from '../ui/avatar';
 
 import { Transfer } from './Transfer';
 import { Receive } from './Receive';
 import AppStore from './AppStore';
+import { sendToBackground } from '@plasmohq/messaging';
 
 export function Asset() {
   const [activeTab, setActiveTab] = useState<'send' | 'receive' | null>(null);
@@ -48,21 +46,20 @@ export function Asset() {
     }
   }, [asset]);
 
-  const fetchAssetContext = () => {
+  const fetchAssetContext = async () => {
     setLoading(true);
-    chrome.runtime.sendMessage({ type: 'GET_ASSET_CONTEXT' }, response => {
-      if (chrome.runtime.lastError) {
-        console.error('Error fetching asset context:', chrome.runtime.lastError.message);
-        setLoading(false);
-        return;
-      }
+    try {
+      const response = await sendToBackground({ name: "keepkey-request", body: { type: 'GET_ASSET_CONTEXT' } });
       if (response && response.assets) {
         console.log('response.assets:', response.assets);
         setAsset(response.assets);
       } else {
         setLoading(false);
       }
-    });
+    } catch (error) {
+      console.error('Error fetching asset context:', error);
+      setLoading(false);
+    }
   };
 
   const fetchBalancesAndPubkeys = (assetLoaded: any) => {
@@ -73,7 +70,7 @@ export function Asset() {
     }
   };
 
-  const fetchEthereumBalance = (assetLoaded: any) => {
+  const fetchEthereumBalance = async (assetLoaded: any) => {
     setLoading(true);
     const addressEth = assetLoaded.pubkeys[0]?.address;
     if (!addressEth) {
@@ -81,8 +78,10 @@ export function Asset() {
       setLoading(false);
       return;
     }
-    chrome.runtime.sendMessage(
-        {
+    try {
+      const response = await sendToBackground({
+        name: "keepkey-request",
+        body: {
           type: 'WALLET_REQUEST',
           requestInfo: {
             chain: 'ethereum',
@@ -90,41 +89,35 @@ export function Asset() {
             params: [addressEth, 'latest'],
           },
         },
-        response => {
-          if (chrome.runtime.lastError) {
-            console.error('Error fetching balance:', chrome.runtime.lastError.message);
-            setLoading(false);
-            return;
-          }
-          if (response && response.result) {
-            const balanceWei = BigInt(response.result);
-            const balanceEth = Number(balanceWei) / 1e18;
-            const formattedBalance = formatBalance(balanceEth);
-            setBalances([{ balance: formattedBalance, symbol: assetLoaded.symbol }]);
-          } else {
-            console.error('Invalid response for balance:', response);
-          }
-          setLoading(false);
-        },
-    );
+      });
+      if (response && response.result) {
+        const balanceWei = BigInt(response.result);
+        const balanceEth = Number(balanceWei) / 1e18;
+        const formattedBalance = formatBalance(balanceEth);
+        setBalances([{ balance: formattedBalance, symbol: assetLoaded.symbol }]);
+      } else {
+        console.error('Invalid response for balance:', response);
+      }
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+    }
+    setLoading(false);
   };
 
-  const fetchAppBalances = (assetLoaded: any) => {
+  const fetchAppBalances = async (assetLoaded: any) => {
     setLoading(true);
-    chrome.runtime.sendMessage({ type: 'GET_APP_BALANCES' }, response => {
-      if (chrome.runtime.lastError) {
-        console.error('Error fetching balances:', chrome.runtime.lastError.message);
-        setLoading(false);
-        return;
-      }
+    try {
+      const response = await sendToBackground({ name: "keepkey-request", body: { type: 'GET_APP_BALANCES' } });
       if (response && response.balances) {
         const filteredBalances = response.balances.filter((balance: any) => balance.caip === assetLoaded.caip);
         setBalances(filteredBalances);
       } else {
         console.error('Invalid response for balances:', response);
       }
-      setLoading(false);
-    });
+    } catch (error) {
+      console.error('Error fetching balances:', error);
+    }
+    setLoading(false);
   };
 
   const formatBalance = (balance: number) => {
