@@ -3,6 +3,7 @@ import axios from 'axios';
 import { onStartKeepkey } from '../keepkey';
 import { ChainToNetworkId } from '@pioneer-platform/pioneer-caip';
 import { Chain } from '@coinmasters/types';
+import { EIP155_CHAINS } from '../chains';
 const TAG = ' | keepkey-request | '
 let APP = null
 let KEEPKEY_STATE = 0
@@ -17,6 +18,7 @@ let onStart = async function(){
         // await APP.getAssets();
         await APP.getPubkeys();
         await APP.getBalances();
+        // await APP.getCharts();
 
         const pubkeysEth = APP.pubkeys.filter((e: any) => e.networks.includes(ChainToNetworkId[Chain.Ethereum]));
         if (pubkeysEth.length > 0) {
@@ -90,8 +92,8 @@ setInterval(checkKeepKey, 5000);
 const handler: PlasmoMessaging.MessageHandler<RequestBody, RequestResponse> = async (req, res) => {
     const tag = TAG+" | handler | ";
     try {
-        const { type, input } = req.body;
-        console.log(`${TAG} - input:`, input);
+        const { type, message } = req.body;
+        console.log(`${TAG} - message:`, message);
         console.log(`${TAG} - type:`, type);
 
         switch (type) {

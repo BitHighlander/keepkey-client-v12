@@ -119,7 +119,7 @@ const Balances = ({ setShowBack }: any) => {
     try {
       const response = await sendToBackground({
         name: "keepkey-request",
-        body: { type: 'SET_ASSET_CONTEXT', asset }
+        body: { type: 'SET_ASSET_CONTEXT', message:{asset} }
       });
       if (response?.error) {
         console.error('Error setting asset context:', response.error);
