@@ -185,7 +185,7 @@ function App() {
                 />
             </Flex>
             <br/>
-            {isConnecting ? (<div>connecting <Spinner></Spinner></div>) : (<div>not connecting</div>)}
+            {isConnecting ? (<div>connecting... <br/> <Spinner></Spinner></div>) : (<div></div>)}
             {/* Render the appropriate content */}
             {renderContent()}
         </Box>

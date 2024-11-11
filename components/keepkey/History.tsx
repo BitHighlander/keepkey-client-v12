@@ -9,7 +9,6 @@ import {
   SimpleGrid,
   Image,
   IconButton,
-  Select,
   Tooltip,
   Accordion,
 } from '@chakra-ui/react';
@@ -19,9 +18,9 @@ import {
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
-} from "../ui/accordion"
+} from "../ui/accordion";
 
-import {Checkbox} from '../ui/checkbox'
+import { Checkbox } from '../ui/checkbox';
 import { FaTrashAlt, FaInfoCircle } from 'react-icons/fa';
 import { formatDistanceToNow, format } from 'date-fns';
 import { toaster } from '../ui/toaster';
@@ -62,11 +61,6 @@ const History: React.FC<HistoryProps> = ({ transactionContext }) => {
     }
   };
 
-  const addEventToStorage = async (event: any) => {
-    const result = await requestStorage.addEvent(event);
-    loadEvents();
-  };
-
   useEffect(() => {
     loadEvents();
 
@@ -83,7 +77,7 @@ const History: React.FC<HistoryProps> = ({ transactionContext }) => {
 
   const fetchAssets = async () => {
     try {
-      const response = await fetch('/api/GET_ASSETS'); // Replace with actual endpoint
+      const response = await fetch('/api/GET_ASSETS');
       const data = await response.json();
       setAssets(data);
     } catch (error) {
@@ -156,116 +150,53 @@ const History: React.FC<HistoryProps> = ({ transactionContext }) => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
-                        mb={4}>
-                      //chakra3.0
+                        mb={4}
+                    >
                       <AccordionRoot collapsible defaultValue={["b"]}>
-                        {items.map((item, index) => (
-                            <AccordionItem key={index} value={item.value}>
-                              <AccordionItemTrigger>{item.title}</AccordionItemTrigger>
-                              <AccordionItemContent>{item.text}</AccordionItemContent>
-                            </AccordionItem>
-                        ))}
-                      </AccordionRoot>
-                      //chakra 2 imported needs miggration
-                      <AccordionItem borderRadius="md" border="1px solid" borderColor={getStatusColor(event)} boxShadow="md">
-                        <AccordionButton _expanded={{ bg: getStatusColor(event), color: 'white' }} borderRadius="md" p={4}>
-                          <Flex justifyContent="space-between" flex="1" alignItems="center">
-                            <Badge colorScheme={event.blockHeight ? 'green' : 'yellow'}>
-                              {event.blockHeight ? 'Confirmed' : 'Pending'}
-                            </Badge>
-                            <Text fontSize="sm">
-                              {showUnix
-                                  ? format(new Date(event.timestamp), 't')
-                                  : formatDistanceToNow(new Date(event.timestamp))}{' '}
-                              ago
-                            </Text>
-                            {!event.blockHeight && (
-                                <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="sm" />
-                            )}
-                            <AccordionIcon />
-                          </Flex>
-                        </AccordionButton>
-                        <AccordionPanel pb={4}>
-                          <SimpleGrid columns={1} spacing={4}>
-                            <Flex alignItems="center">
-                              <strong>Network:</strong>
-                              {getAssetIcon(event.networkId) && (
-                                  <Image src={getAssetIcon(event.networkId)} alt="network icon" boxSize="20px" ml={2} />
+                        <AccordionItem borderRadius="md" border="1px solid" borderColor={getStatusColor(event)} boxShadow="md">
+                          <AccordionItemTrigger style={{ padding: '1rem', borderRadius: 'md' }}>
+                            <Flex justifyContent="space-between" flex="1" alignItems="center">
+                              <Badge colorScheme={event.blockHeight ? 'green' : 'yellow'}>
+                                {event.blockHeight ? 'Confirmed' : 'Pending'}
+                              </Badge>
+                              <Text fontSize="sm">
+                                {showUnix
+                                    ? format(new Date(event.timestamp), 't')
+                                    : formatDistanceToNow(new Date(event.timestamp))}{' '}
+                                ago
+                              </Text>
+                              {!event.blockHeight && (
+                                  <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="sm" />
                               )}
-                              <Text ml={2}>{event.networkId}</Text>
                             </Flex>
-                            {event.txid && typeof event.txid === 'object' && event.txid.txid ? (
-                                <Text>
-                                  <strong>Txid:</strong>{' '}
-                                  <a
-                                      href={`https://etherscan.io/tx/${event.txid.txid}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer">
-                                    {event.txid.txid}
-                                  </a>
-                                </Text>
-                            ) : (
-                                <Text>
-                                  <strong>Txid:</strong> {event.txid}
-                                </Text>
-                            )}
-                            <Text>
-                              <strong>Status:</strong>{' '}
-                              {event.blockHeight ? (
-                                  <Badge colorScheme="green">Confirmed</Badge>
-                              ) : (
-                                  <Badge colorScheme="yellow">Pending</Badge>
-                              )}
-                            </Text>
-                            <Text>
-                              <strong>Site URL:</strong> {event.siteUrl}
-                            </Text>
-                          </SimpleGrid>
-
-                          <Flex mt={4} justifyContent="space-around">
-                            <Button colorScheme="blue" onClick={() => console.log('Open transaction')} size="sm">
-                              Open
-                            </Button>
-                            <Button colorScheme="green" onClick={() => console.log('Broadcast transaction')} size="sm">
-                              Broadcast
-                            </Button>
-                            <Button colorScheme="teal" onClick={() => window.open(event.siteUrl, '_blank')} size="sm">
-                              External
-                            </Button>
-                            <Tooltip label="View Raw JSON" aria-label="View Raw JSON">
-                              <IconButton
-                                  icon={<FaInfoCircle />}
-                                  aria-label="View Raw JSON"
-                                  onClick={() => toggleRawJson(event.id)}
-                                  size="sm"
-                              />
-                            </Tooltip>
-                          </Flex>
-
-                          <Box
-                              display={expandedRawJson === event.id ? 'block' : 'none'}
-                              mt={4}
-                              p={4}
-                              bg="black"
-                              borderRadius="md"
-                              overflow="auto"
-                              maxHeight="200px"
-                              whiteSpace="pre-wrap"
-                              fontSize="sm">
-                            <pre>{JSON.stringify(event, null, 2)}</pre>
-                          </Box>
-
-                          <Flex mt={4} justifyContent="flex-end">
-                            <IconButton
-                                aria-label="Delete transaction"
-                                icon={<FaTrashAlt />}
-                                colorScheme="red"
-                                size="sm"
-                                onClick={() => handleDelete(event.id)}
-                            />
-                          </Flex>
-                        </AccordionPanel>
-                      </AccordionItem>
+                          </AccordionItemTrigger>
+                          <AccordionItemContent>
+                            <SimpleGrid columns={1} spacing={4} padding="1rem">
+                              <Flex alignItems="center">
+                                <strong>Network:</strong>
+                                {getAssetIcon(event.networkId) && (
+                                    <Image src={getAssetIcon(event.networkId)} alt="network icon" boxSize="20px" ml={2} />
+                                )}
+                                <Text ml={2}>{event.networkId}</Text>
+                              </Flex>
+                              <Text>
+                                <strong>Txid:</strong> {event.txid}
+                              </Text>
+                              <Text>
+                                <strong>Status:</strong>{' '}
+                                {event.blockHeight ? (
+                                    <Badge colorScheme="green">Confirmed</Badge>
+                                ) : (
+                                    <Badge colorScheme="yellow">Pending</Badge>
+                                )}
+                              </Text>
+                              <Text>
+                                <strong>Site URL:</strong> {event.siteUrl}
+                              </Text>
+                            </SimpleGrid>
+                          </AccordionItemContent>
+                        </AccordionItem>
+                      </AccordionRoot>
                     </MotionBox>
                 ))}
               </AnimatePresence>
