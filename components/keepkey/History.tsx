@@ -9,16 +9,19 @@ import {
   SimpleGrid,
   Image,
   IconButton,
-  Checkbox,
   Select,
   Tooltip,
   Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  useDisclosure,
 } from '@chakra-ui/react';
+
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../ui/accordion"
+
+import {Checkbox} from '../ui/checkbox'
 import { FaTrashAlt, FaInfoCircle } from 'react-icons/fa';
 import { formatDistanceToNow, format } from 'date-fns';
 import { toaster } from '../ui/toaster';
@@ -154,6 +157,16 @@ const History: React.FC<HistoryProps> = ({ transactionContext }) => {
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
                         mb={4}>
+                      //chakra3.0
+                      <AccordionRoot collapsible defaultValue={["b"]}>
+                        {items.map((item, index) => (
+                            <AccordionItem key={index} value={item.value}>
+                              <AccordionItemTrigger>{item.title}</AccordionItemTrigger>
+                              <AccordionItemContent>{item.text}</AccordionItemContent>
+                            </AccordionItem>
+                        ))}
+                      </AccordionRoot>
+                      //chakra 2 imported needs miggration
                       <AccordionItem borderRadius="md" border="1px solid" borderColor={getStatusColor(event)} boxShadow="md">
                         <AccordionButton _expanded={{ bg: getStatusColor(event), color: 'white' }} borderRadius="md" p={4}>
                           <Flex justifyContent="space-between" flex="1" alignItems="center">

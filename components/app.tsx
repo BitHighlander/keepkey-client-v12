@@ -1,7 +1,7 @@
 /*
      App
  */
-import { sendToBackgroundViaRelay } from "@plasmohq/messaging";
+// import { sendToBackgroundViaRelay } from "@plasmohq/messaging";
 import React, { useState, useEffect } from 'react';
 import {
     useDisclosure,
@@ -32,22 +32,7 @@ import Asset from './keepkey/Asset';
 import History from './keepkey/History';
 import Settings from './keepkey/Settings';
 
-const stateNames: { [key: number]: string } = {
-    0: 'unknown',
-    1: 'disconnected',
-    2: 'connected',
-    3: 'busy',
-    4: 'errored',
-    5: 'paired',
-};
-
 function App() {
-    const [txHash, setTxHash] = useState(undefined);
-    const [txInput, setTxInput] = useState(0);
-    const [selector, setSelector] = useState("#itero");
-
-    const [csResponse, setCsData] = useState("");
-    const [manifestData, setManifestData] = useState();
     const [balances, setBalances] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [keepkeyState, setKeepkeyState] = useState<number | null>(null);
@@ -129,13 +114,13 @@ function App() {
             setTransactionContext(null);
             setShowBack(false);
 
-            chrome.runtime.sendMessage({ type: 'CLEAR_ASSET_CONTEXT' }, response => {
-                if (response?.success) {
-                    console.log('Asset context cleared on backend');
-                } else {
-                    console.error('Failed to clear asset context on backend:', response?.error);
-                }
-            });
+            // chrome.runtime.sendMessage({ type: 'CLEAR_ASSET_CONTEXT' }, response => {
+            //     if (response?.success) {
+            //         console.log('Asset context cleared on backend');
+            //     } else {
+            //         console.error('Failed to clear asset context on backend:', response?.error);
+            //     }
+            // });
         } else {
             onSettingsOpen();
             setShowBack(true);
@@ -199,7 +184,8 @@ function App() {
                     onClick={refreshBalances}
                 />
             </Flex>
-
+            <br/>
+            {isConnecting ? (<div>connecting <Spinner></Spinner></div>) : (<div>not connecting</div>)}
             {/* Render the appropriate content */}
             {renderContent()}
         </Box>
