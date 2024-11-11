@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Flex, Switch, Text, Avatar, Badge } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, Badge } from '@chakra-ui/react';
+import { Avatar } from '../ui/avatar';
 import { availableChainsByWallet, ChainToNetworkId, getChainEnumValue, NetworkIdToChain } from '@coinmasters/types';
 // @ts-ignore
 import { COIN_MAP_LONG } from '@pioneer-platform/pioneer-coins';
 import { blockchainStorage, blockchainDataStorage } from '@extension/storage';
 import { toaster } from '../ui/toaster';
-
+import { Switch } from '../ui/switch'
 // Styles for truncating text with ellipsis
 const middleEllipsisStyle = {
   whiteSpace: 'nowrap',
