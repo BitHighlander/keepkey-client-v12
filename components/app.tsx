@@ -1,17 +1,17 @@
 /*
      App
  */
-import { sendToBackgroundViaRelay } from "@plasmohq/messaging"
+import { sendToBackgroundViaRelay } from "@plasmohq/messaging";
 import React, { useState, useEffect } from 'react';
 import {
     useDisclosure,
     Flex,
     Text,
     Box,
-    IconButton,
     Spinner,
-    Button,
 } from '@chakra-ui/react';
+import { Button } from './ui/button';
+import { IconButton } from './ui/iconbutton';
 import {
     DialogBody,
     DialogBackdrop,
@@ -22,9 +22,9 @@ import {
     DialogRoot,
     DialogTitle,
     DialogTrigger,
-} from "./ui/dialog"
+} from "./ui/dialog";
 import { FaChevronLeft, FaRedo, FaCog, FaCalendarAlt } from 'react-icons/fa';
-import { sendToBackground, sendToContentScript } from "@plasmohq/messaging"
+import { sendToBackground, sendToContentScript } from "@plasmohq/messaging";
 import Connect from './keepkey/Connect';
 import Loading from './keepkey/Loading';
 import Balances from './keepkey/Balances';
@@ -42,12 +42,12 @@ const stateNames: { [key: number]: string } = {
 };
 
 function App() {
-    const [txHash, setTxHash] = useState(undefined)
-    const [txInput, setTxInput] = useState(0)
-    const [selector, setSelector] = useState("#itero")
+    const [txHash, setTxHash] = useState(undefined);
+    const [txInput, setTxInput] = useState(0);
+    const [selector, setSelector] = useState("#itero");
 
-    const [csResponse, setCsData] = useState("")
-    const [manifestData, setManifestData] = useState()
+    const [csResponse, setCsData] = useState("");
+    const [manifestData, setManifestData] = useState();
     const [balances, setBalances] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [keepkeyState, setKeepkeyState] = useState<number | null>(null);
@@ -57,73 +57,35 @@ function App() {
     const [isConnecting, setIsConnecting] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const [a, setA] = useState(0)
-    const [b, setB] = useState(4)
-    const [addResult, setAddResult] = useState(0)
-
-    const { isOpen: isSettingsOpen, onOpen: onSettingsOpen, onClose: onSettingsClose } = useDisclosure();
+    const { onOpen: onSettingsOpen, onClose: onSettingsClose } = useDisclosure();
 
     const refreshBalances = async () => {
         try {
             setIsRefreshing(true);
             setKeepkeyState(null);
-            // chrome.runtime.sendMessage({ type: 'ON_START' }, response => {
-            //     if (response?.success) {
-            //         console.log('Sidebar opened successfully');
-            //     } else {
-            //         console.error('Failed to open sidebar:', response?.error);
-            //     }
-            // });
-
             //@ts-ignore
-            sendToBackground({
+            await sendToBackground({
                 name: "keepkey-request",
                 body: {
                     type: 'ON_START'
                 }
-            })
-
-
+            });
             //@ts-ignore
             const resp = await sendToBackground({
                 name: "keepkey-request",
                 body: {
                     type: 'GET_KEEPKEY_STATE'
                 }
-            })
-            setKeepkeyState(resp.state)
+            });
+            setKeepkeyState(resp.state);
         } catch (e) {
             console.error(e);
         } finally {
-            setTimeout(() => setIsRefreshing(false), 12000); // Stop the spinner after 2 seconds
+            setTimeout(() => setIsRefreshing(false), 12000);
         }
     };
 
-    useEffect(() => {
-        const messageListener = (message: any) => {
-            console.log('Received message:', message);
-            if (message.type === 'KEEPKEY_STATE_CHANGED' && message.state !== undefined) {
-                setKeepkeyState(message.state);
-            }
-            if (message.type === 'ASSET_CONTEXT_UPDATED' && message.assetContext) {
-                setAssetContext(message.assetContext);
-                setShowBack(true);
-            }
-            if (message.type === 'TRANSACTION_CONTEXT_UPDATED' && message.id) {
-                console.log('TRANSACTION_CONTEXT_UPDATED', message.id);
-                setTransactionContext(message.id); // Show Activity page on transaction event
-                setShowBack(true); // Ensure the "Back" button is shown
-            }
-        };
-
-        chrome.runtime.onMessage.addListener(messageListener);
-        return () => {
-            chrome.runtime.onMessage.removeListener(messageListener);
-        };
-    }, []);
-
     const renderContent = () => {
-        // If transactionContext is available, show the History view
         if (transactionContext) {
             return <History transactionContext={transactionContext} />;
         }
@@ -133,18 +95,15 @@ function App() {
             case 1:
             case 2:
             case 3:
-                // // return <div>Loading</div>
-                // return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
+                return <Loading setIsConnecting={setIsConnecting} keepkeyState={keepkeyState} />;
             case 4:
                 return <Connect setIsConnecting={setIsConnecting} />;
-                // return <>state 4</>
             case 5:
                 if (assetContext) {
                     return <Asset asset={assetContext} onClose={() => setAssetContext(null)} />;
                 } else {
                     return <Balances balances={balances} loading={loading} setShowBack={setShowBack} />;
                 }
-                // return <>state 5</>
             default:
                 return (
                     <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
@@ -166,12 +125,10 @@ function App() {
 
     const handleSettingsClick = () => {
         if (showBack) {
-            // Clear assetContext on the frontend
             setAssetContext(null);
             setTransactionContext(null);
-            setShowBack(false); // Hide the back button
+            setShowBack(false);
 
-            // Clear assetContext on the backend
             chrome.runtime.sendMessage({ type: 'CLEAR_ASSET_CONTEXT' }, response => {
                 if (response?.success) {
                     console.log('Asset context cleared on backend');
@@ -180,16 +137,15 @@ function App() {
                 }
             });
         } else {
-            // Open settings
             onSettingsOpen();
-            setShowBack(true); // Show the back button when settings are opened
+            setShowBack(true);
         }
     };
 
     const handleTransactionsClick = () => {
         try {
-            setTransactionContext('none'); // Switch to the transaction context
-            setShowBack(true); // Show the back button
+            setTransactionContext('none');
+            setShowBack(true);
         } catch (e) {
             console.error(e);
         }
@@ -201,65 +157,51 @@ function App() {
                 KeepKey State: {keepkeyState}
             </Text>
 
+            <Flex alignItems="center" justifyContent="space-between" p={4} borderBottom="1px solid #ccc" width="100%">
+                <DialogRoot size="cover" placement="center" motionPreset="slide-in-bottom">
+                    {/* Left-aligned button (Settings or Back depending on showBack) */}
+                    <DialogTrigger asChild>
+                        <IconButton
+                            icon={showBack ? <FaChevronLeft /> : <FaCog />}
+                            aria-label={showBack ? 'Back' : 'Settings'}
+                            onClick={showBack ? handleSettingsClick : onSettingsOpen}
+                        />
+                    </DialogTrigger>
+
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Dialog Title</DialogTitle>
+                            <DialogCloseTrigger />
+                        </DialogHeader>
+                        <DialogBody>
+                            <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                                Settings For Your KeepKey
+                            </Text>
+                            <Settings />
+                        </DialogBody>
+                    </DialogContent>
+                </DialogRoot>
+
+                {/* Center-aligned Activity button */}
+                <Box mx="auto">
+                    <IconButton
+                        color="white"
+                        icon={<FaCalendarAlt />} // Activity Icon
+                        aria-label="Activity"
+                        onClick={handleTransactionsClick} // Handle transaction context
+                    />
+                </Box>
+
+                {/* Right-aligned button (Refresh) */}
+                <IconButton
+                    icon={<FaRedo />}
+                    aria-label="Refresh"
+                    onClick={refreshBalances}
+                />
+            </Flex>
+
             {/* Render the appropriate content */}
             {renderContent()}
-
-
-            <div>
-                <Button variant="outline" size="sm"
-                    onClick={async () => {
-                        console.log('Button Pushed')
-                        //@ts-ignore
-                        const resp = await sendToBackground({
-                            name: "keepkey-request",
-                            body: {
-                                type: 'GET_KEEPKEY_STATE',
-                                input: txInput
-                            }
-                        })
-                        console.log('resp: ', resp)
-                        setKeepkeyState(resp.state)
-                    }}>
-                    Get State
-                </Button>
-
-
-                {/*<input value={selector} onChange={(e) => setSelector(e.target.value)} />*/}
-
-                {/*<button*/}
-                {/*    onClick={async () => {*/}
-                {/*        const csResponse = await sendToContentScript({*/}
-                {/*            name: "query-selector-text",*/}
-                {/*            body: selector*/}
-                {/*        })*/}
-                {/*        setCsData(csResponse)*/}
-                {/*    }}>*/}
-                {/*    Query Text on Web Page*/}
-                {/*</button>*/}
-                {/*<br />*/}
-                {/*<label>Text Data:</label>*/}
-                {/*<p>{csResponse}</p>*/}
-            </div>
-
-            <DialogRoot size="cover" placement="center" motionPreset="slide-in-bottom">
-                <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                        Open Dialog
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Dialog Title</DialogTitle>
-                        <DialogCloseTrigger />
-                    </DialogHeader>
-                    <DialogBody>
-                        <Text fontSize="lg" fontWeight="bold" textAlign="center">
-                            Settings For Your KeepKey
-                        </Text>
-                        <Settings />
-                    </DialogBody>
-                </DialogContent>
-            </DialogRoot>
         </Box>
     );
 }

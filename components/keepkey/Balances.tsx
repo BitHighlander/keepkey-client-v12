@@ -77,8 +77,11 @@ const Balances = ({ setShowBack }: any) => {
       setLoading(true);
       let tag = " | fetchAssetsAndBalances | "
       try {
+        //@ts-ignore
         const assetsResponse = await sendToBackground({ name: "keepkey-request", body: { type: 'GET_ASSETS' } });
+        //@ts-ignore
         const balancesResponse = await sendToBackground({ name: "keepkey-request", body: { type: 'GET_APP_BALANCES' } });
+        //@ts-ignore
         const assetContextResponse = await sendToBackground({ name: "keepkey-request", body: { type: 'GET_ASSET_CONTEXT' } });
 
         if (assetsResponse?.assets) {
@@ -117,6 +120,7 @@ const Balances = ({ setShowBack }: any) => {
   const onSelect = async (asset: any) => {
     console.log('Asset selected:', asset);
     try {
+      //@ts-ignore
       const response = await sendToBackground({
         name: "keepkey-request",
         body: { type: 'SET_ASSET_CONTEXT', message:{asset} }
@@ -171,7 +175,7 @@ const Balances = ({ setShowBack }: any) => {
                                 <Avatar src={asset.icon} />
                                 <Box ml={3} flex="1" minWidth="0">
                                   <Text fontWeight="bold" isTruncated>
-                                    {asset.name} {asset.manual && <Badge colorScheme="purple">Added Asset</Badge>}
+                                    {asset.name}
                                   </Text>
                                   <Text as="span" fontSize="lg">
                                     {integer}.{largePart}

@@ -3,7 +3,6 @@ import {
   Input,
   Button,
   Text,
-  Avatar,
   Flex,
 } from '@chakra-ui/react';
 import {
@@ -16,8 +15,8 @@ import {
   DialogFooter,
   DialogCloseTrigger,
 } from "../ui/dialog";
+import {Avatar} from "../ui/avatar";
 import { toaster } from "../ui/toaster";
-
 import { dappStorage } from '@extension/storage';
 
 interface AddDappModalProps {
